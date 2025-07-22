@@ -1,0 +1,15 @@
+{
+  "name": "news-application",
+  "version": "1.0.0",
+  "description": "News application with Claude Code Action",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "test": "echo \"No tests yet\" && exit 0",
+    "build": "echo \"Build process\" && exit 0",
+    "lint": "echo \"Linting\" && exit 0"
+  },
+  "keywords": ["news", "application", "claude"],
+  "author": "",
+  "license": "MIT"
+}

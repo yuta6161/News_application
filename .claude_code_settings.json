@@ -1,0 +1,9 @@
+{
+  "project_name": "News Application",
+  "description": "News application built with Claude Code Action",
+  "language": "javascript",
+  "framework": "nodejs",
+  "test_command": "npm test",
+  "build_command": "npm run build",
+  "lint_command": "npm run lint"
+}
