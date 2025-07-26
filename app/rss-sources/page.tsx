@@ -59,7 +59,7 @@ export default function RSSSourcesPage() {
         let status: 'active' | 'inactive' | 'error' | 'blocked' = 'inactive'
         let diagnosis = 'データベース記事の日付のみでの簡易判定'
         
-        if (articlesCount > 0) {
+        if (articlesCount > 0 && articles && articles.length > 0) {
           const latestDate = new Date(articles[0].created_at)
           const daysSinceLatest = Math.floor((Date.now() - latestDate.getTime()) / (1000 * 60 * 60 * 24))
           
