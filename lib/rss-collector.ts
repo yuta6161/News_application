@@ -63,7 +63,7 @@ export async function collectRSSFeeds(): Promise<Article[]> {
           category: source.category,
           original_language: source.language, // 既存のoriginal_languageカラムを使用
           importance_score: importanceScore, // 計算された重要度スコア
-          ai_summary: null // 将来AI要約を追加する場所
+          ai_summary: undefined // 将来AI要約を追加する場所
         };
       });
       
