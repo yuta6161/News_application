@@ -33,6 +33,7 @@ interface SearchResponse {
   results: SearchResult[]
   metadata: SearchMetadata
   timestamp: string
+  error?: string
 }
 
 export default function SemanticSearch() {
