@@ -78,7 +78,7 @@ export async function collectRSSFeeds(): Promise<Article[]> {
           category: source.category,
           original_language: source.language,
           importance_score: importanceScore,
-          ai_summary: null
+          ai_summary: undefined
         };
       });
       
