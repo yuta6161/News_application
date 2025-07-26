@@ -3,6 +3,7 @@
 
 import { getGeminiFlash } from './gemini';
 import { supabase } from '../supabase';
+import { getCategoryPrompt, isValidCategory } from './tag-categories';
 
 export interface ArticleAnalysisResult {
   title_ja?: string; // 日本語翻訳されたタイトル
@@ -121,32 +122,24 @@ export async function analyzeArticleWithGemini(
     ).join('\n');
 
     const prompt = `
-記事分析とタグ付けを行ってください。
+記事分析を行い、JSONのみを出力してください。
 
-**記事情報:**
 タイトル: ${title}
-要約: ${summary}
-ソース: ${sourceName}
-URL: ${sourceUrl}
+要約: ${summary.substring(0, 200)}...
 
-**事前定義タグ（該当する場合は優先使用）:**
-${predefinedTagsList || '（該当する事前定義タグなし）'}
-
-**出力形式（厳密JSON - エラー防止のため括弧の対応に注意）:**
+出力形式（必ずこの形式のみ、余計な文字を含めない）:
 {
-  "title_ja": "日本語に翻訳されたタイトル",
-  "summary": "記事の簡潔な要約（100-150文字）",
+  "title_ja": "日本語タイトル",
+  "summary": "要約（100文字以内）",
   "tags": [
     {
       "tag_name": "タグ名",
       "confidence_score": 0.9,
       "category": "company",
-      "is_auto_generated": false
+      "is_auto_generated": true
     }
   ],
-  "importance_score": 7.5,
-  "sentiment": "neutral",
-  "key_points": ["要点1", "要点2"]
+  "importance_score": 7.5
 }
 
 **重要な出力ルール:**
@@ -161,8 +154,9 @@ ${predefinedTagsList || '（該当する事前定義タグなし）'}
 3. **新規タグの作成**: 事前定義タグで表現できない重要な概念がある場合のみ新規作成し、is_auto_generated: true に設定
 4. **信頼度スコア**: 0.1-1.0の範囲で、タグの適用確信度を設定
 5. **重要度スコア**: 1.0-10.0の範囲で、ニュースの重要度を評価（速報性、影響度、革新性を考慮）
-6. **カテゴリ**: 既存の8カテゴリのいずれかに分類
-7. **タグ数制限**: 最大8個まで
+6. **タグ数制限**: 最大8個まで
+
+${getCategoryPrompt()}
 
 **重要度基準:**
 - 9.0-10.0: 業界を変える革新的発表

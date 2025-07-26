@@ -1,0 +1,5 @@
+  # 事前定義タグのみ（従来版）
+  npm run analyze-tags
+
+  # 包括的分析（事前定義 + 自動生成）
+  npm run analyze-tags-full

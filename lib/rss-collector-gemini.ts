@@ -3,6 +3,7 @@ import { rssSources } from './rss-sources';
 import { supabase } from './supabase';
 import { calculateImportanceScore } from './importance-calculator';
 import { analyzeArticleWithGemini, saveArticleAnalysis } from './ai/article-analyzer';
+import { checkDuplicateUrls } from './mcp-supabase-helper';
 
 const parser = new Parser({
   customFields: {
@@ -118,8 +119,8 @@ export async function saveArticlesWithAIAnalysis(articles: Article[]): Promise<C
     errors: 0
   };
   
-  // 重複チェック用に既存のURLを取得（より効率的なクエリ）
-  console.log('🔍 重複チェック実行中...');
+  // MCP Supabaseツールを使用した改良版重複チェック
+  console.log('🔍 MCP Supabase重複チェック実行中...');
   const articleUrls = articles.map(a => a.source_url).filter(url => url && url.trim() !== '');
   
   if (articleUrls.length === 0) {
@@ -127,19 +128,7 @@ export async function saveArticlesWithAIAnalysis(articles: Article[]): Promise<C
     return stats;
   }
 
-  const { data: existingArticles, error: checkError } = await supabase
-    .from('news_articles')
-    .select('source_url')
-    .in('source_url', articleUrls);
-  
-  if (checkError) {
-    console.error('❌ 重複チェックエラー:', checkError);
-    console.error('⚠️ データベース接続の問題が発生しました。記事保存時にも重複エラーが発生する可能性があります');
-    // エラーが発生した場合でも処理を続行（重複の可能性はあるが停止はしない）
-    // この場合、記事保存時にデータベース側の重複制約に依存する
-  }
-  
-  const existingLinks = new Set(existingArticles?.map(a => a.source_url) || []);
+  const existingLinks = await checkDuplicateUrls(articleUrls);
   console.log(`📊 既存記事数: ${existingLinks.size} 件`);
   
   // 新しい記事のみフィルタリング
@@ -198,7 +187,7 @@ export async function saveArticlesWithAIAnalysis(articles: Article[]): Promise<C
       const articleId = savedArticle.id;
       console.log(`   ✅ 記事保存完了 (ID: ${articleId})`);
       
-      // 2. Geminiによる記事分析
+      // 2. Geminiによる記事分析（オプショナル）
       try {
         console.log(`   🤖 Gemini分析中...`);
         
