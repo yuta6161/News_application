@@ -22,10 +22,6 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null)
   const [activeCategory, setActiveCategory] = useState<NewsCategory | 'All'>('All')
 
-  useEffect(() => {
-    fetchLatestArticles()
-  }, [activeCategory, fetchLatestArticles])
-
   const fetchLatestArticles = useCallback(async () => {
     try {
       setIsLoading(true)
@@ -48,6 +44,10 @@ export default function HomePage() {
       setIsLoading(false)
     }
   }, [activeCategory])
+
+  useEffect(() => {
+    fetchLatestArticles()
+  }, [activeCategory, fetchLatestArticles])
 
   if (isLoading) {
     return (
