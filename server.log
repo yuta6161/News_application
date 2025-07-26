@@ -4624,3 +4624,85 @@ Gemini応答のパース失敗: SyntaxError: Unexpected end of JSON input
 ✅ 記事取得成功: 100 件
  GET /api/articles-simple 200 in 97ms
  ✓ Compiled in 1629ms (685 modules)
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 3.8s (72 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  enable debug logging with { debug: true })
+ GET /rss-sources 200 in 1258ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 995ms (688 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1293ms
+ ✓ Compiled in 534ms (335 modules)
+ ✓ Compiled in 232ms (335 modules)
+ ✓ Compiled in 651ms (699 modules)
+ ✓ Compiled in -2119ms (699 modules)
+ ✓ Compiled in 357ms (699 modules)
+ ⨯ ./app/page.tsx
+Error: 
+  [31mx[0m Expected ',', got 'if'
+    ,-[[36;1;4m/home/lain6161/News_application/app/page.tsx[0m:49:1]
+ [2m49[0m |     }
+ [2m50[0m |   }
+ [2m51[0m | 
+ [2m52[0m |   if (isLoading) {
+    : [31;1m  ^^[0m
+ [2m53[0m |     return (
+ [2m54[0m |       <div className="min-h-screen bg-gray-50 py-8">
+ [2m55[0m |         <div className="max-w-4xl mx-auto px-4">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/page.tsx
+ ○ Compiling /_error ...
+ ⨯ ./app/page.tsx
+Error: 
+  [31mx[0m Expected ',', got 'if'
+    ,-[[36;1;4m/home/lain6161/News_application/app/page.tsx[0m:49:1]
+ [2m49[0m |     }
+ [2m50[0m |   }
+ [2m51[0m | 
+ [2m52[0m |   if (isLoading) {
+    : [31;1m  ^^[0m
+ [2m53[0m |     return (
+ [2m54[0m |       <div className="min-h-screen bg-gray-50 py-8">
+ [2m55[0m |         <div className="max-w-4xl mx-auto px-4">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/page.tsx
+ GET /rss-sources 500 in 41ms
+ ⨯ ./app/page.tsx
+Error: 
+  [31mx[0m Expected ',', got 'if'
+    ,-[[36;1;4m/home/lain6161/News_application/app/page.tsx[0m:49:1]
+ [2m49[0m |     }
+ [2m50[0m |   }
+ [2m51[0m | 
+ [2m52[0m |   if (isLoading) {
+    : [31;1m  ^^[0m
+ [2m53[0m |     return (
+ [2m54[0m |       <div className="min-h-screen bg-gray-50 py-8">
+ [2m55[0m |         <div className="max-w-4xl mx-auto px-4">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/page.tsx
+ GET /.well-known/appspecific/com.chrome.devtools.json 500 in 556ms
+ ✓ Compiled /_not-found in 572ms (914 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /_next/static/webpack/e5f094ee2f07f4cc.webpack.hot-update.json 404 in 686ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`)
+ GET /rss-sources 200 in 108ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 24ms
+ ✓ Compiled in 579ms (928 modules)
+ ✓ Compiled in 401ms (928 modules)
+ ✓ Compiled in 327ms (928 modules)
+ ✓ Compiled in 281ms (523 modules)

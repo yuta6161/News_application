@@ -1,15 +1,23 @@
 'use client'
 
 import { useState } from 'react'
+import { Star, Globe, Clock, ArrowUpRight } from 'lucide-react'
+import { formatDistanceToNow } from 'date-fns'
+import { ja } from 'date-fns/locale'
 
 interface SimpleArticle {
   id: string
   title: string
+  summary: string
   ai_summary: string | null
   source_name: string
+  source_url: string
+  source_country?: string
   importance_score: number
   published_at: string
   category: string
+  is_translated?: boolean
+  tags: string[]
 }
 
 interface SimpleNewsCardProps {
@@ -93,7 +101,7 @@ export default function NewsCard({ article, onRead, onHelpful }: SimpleNewsCardP
         </div>
         
         <div className="flex items-center space-x-2 text-xs text-[#5D4037] dark:text-[#D2B48C]">
-          <span>{COUNTRY_FLAGS[article.source_country] || '🌐'}</span>
+          <span>{COUNTRY_FLAGS[article.source_country || 'default'] || '🌐'}</span>
           <span className="truncate max-w-20 sm:max-w-none">{article.source_name}</span>
           <Clock className="w-3 h-3" />
           <span>{formatPublishTime(article.published_at)}</span>

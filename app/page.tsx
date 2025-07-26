@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import CategoryTabs from '@/components/CategoryTabs'
 import SimpleNewsCard from '@/components/SimpleNewsCard'
@@ -24,9 +24,9 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchLatestArticles()
-  }, [activeCategory])
+  }, [activeCategory, fetchLatestArticles])
 
-  const fetchLatestArticles = async () => {
+  const fetchLatestArticles = useCallback(async () => {
     try {
       setIsLoading(true)
       
@@ -47,7 +47,7 @@ export default function HomePage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [activeCategory])
 
   if (isLoading) {
     return (

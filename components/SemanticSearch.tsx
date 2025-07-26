@@ -125,7 +125,7 @@ export default function SemanticSearch() {
       {/* デバッグ情報 */}
       {process.env.NODE_ENV === 'development' && (
         <div className="mb-4 p-2 bg-gray-100 rounded text-sm">
-          <strong>Debug:</strong> Query state = "{query}" (length: {query.length})
+          <strong>Debug:</strong> Query state = &quot;{query}&quot; (length: {query.length})
         </div>
       )}
 

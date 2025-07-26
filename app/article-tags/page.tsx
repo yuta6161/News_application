@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
@@ -36,14 +36,14 @@ export default function ArticleTagsPage() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [fetchData])
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     await Promise.all([
       fetchArticlesWithTags(),
       fetchTagSummaries()
     ])
-  }
+  }, [])
 
   const fetchArticlesWithTags = async () => {
     try {
