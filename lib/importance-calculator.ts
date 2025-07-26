@@ -19,11 +19,16 @@ export function calculateImportanceScore(
   
   // カテゴリによる調整
   const categoryBonus = {
-    'AI': 2.0,          // AI関連は最優先
-    'Tech': 1.0,        // Tech関連は高優先
-    'Startup': 0.5,     // スタートアップは中優先
-    'Business': 0.3,    // ビジネスは普通
-    'General': 0.0      // 一般記事は基準値
+    'AI': 2.0,              // AI関連は最優先
+    'Tech': 1.0,            // Tech関連は高優先
+    'Startup': 0.5,         // スタートアップは中優先
+    'Business': 0.3,        // ビジネスは普通
+    'Music': 0.2,           // 音楽関連
+    'World': 0.4,           // 世界ニュース
+    'Sports': 0.1,          // スポーツ
+    'Entertainment': 0.1,   // エンターテイメント
+    'Conspiracy': -0.5,     // 陰謀論は重要度を下げる
+    'General': 0.0          // 一般記事は基準値
   };
   
   score += categoryBonus[source.category] || 0.0;
