@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseUtils } from '@/lib/supabase'
+import { supabaseUtils, typedSupabase } from '@/lib/supabase'
 
 // GET /api/news - ニュース記事の取得
 export async function GET(request: NextRequest) {
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 記事をデータベースに挿入
-    const { data, error } = await supabaseUtils.typedSupabase
+    const { data, error } = await typedSupabase
       .from('news_articles')
       .insert({
         title: body.title,
