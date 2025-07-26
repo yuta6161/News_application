@@ -33,8 +33,8 @@ export async function collectRSSFeeds(): Promise<Article[]> {
       const articles = feed.items.slice(0, 10).map(item => {
         // RSS要約の取得（優先順位: contentSnippet > description > content）
         const summary = item.contentSnippet || 
-                       item.description || 
-                       item.content || 
+                       (item as any).description || 
+                       (item as any).content || 
                        'No summary available';
         
         // HTMLタグを除去して最初の200文字を取得
