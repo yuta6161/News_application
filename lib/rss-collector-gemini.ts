@@ -36,8 +36,13 @@ export async function collectRSSFeeds(): Promise<Article[]> {
   
   for (const source of rssSources) {
     try {
-      console.log(`📡 ${source.name} から取得中...`);
+      console.log(`📡 ${source.name} から取得中... (${source.url})`);
       const feed = await parser.parseURL(source.url);
+      
+      if (!feed || !feed.items) {
+        console.log(`   ⚠️ ${source.name}: フィードまたは記事が見つかりません`);
+        continue;
+      }
       
       const articles = feed.items.slice(0, 10).map(item => {
         // RSS要約の取得（優先順位: contentSnippet > description > content）
@@ -81,6 +86,17 @@ export async function collectRSSFeeds(): Promise<Article[]> {
       
     } catch (error) {
       console.error(`   ❌ ${source.name} の取得中にエラー:`, error);
+      
+      // エラーの種類に応じて詳細情報を表示
+      if (error && typeof error === 'object') {
+        if ('code' in error) {
+          console.error(`   📊 エラーコード: ${error.code}`);
+        }
+        if ('response' in error && error.response) {
+          console.error(`   📊 HTTPステータス: ${error.response.statusCode || 'unknown'}`);
+        }
+      }
+      console.error(`   🔗 URL: ${source.url}`);
     }
   }
   
@@ -102,17 +118,41 @@ export async function saveArticlesWithAIAnalysis(articles: Article[]): Promise<C
     errors: 0
   };
   
-  // 重複チェック用に既存のURLを取得
-  const { data: existingArticles } = await supabase
+  // 重複チェック用に既存のURLを取得（より効率的なクエリ）
+  console.log('🔍 重複チェック実行中...');
+  const articleUrls = articles.map(a => a.source_url).filter(url => url && url.trim() !== '');
+  
+  if (articleUrls.length === 0) {
+    console.log('⚠️ 有効なURLを持つ記事がありません');
+    return stats;
+  }
+
+  const { data: existingArticles, error: checkError } = await supabase
     .from('news_articles')
     .select('source_url')
-    .in('source_url', articles.map(a => a.source_url));
+    .in('source_url', articleUrls);
+  
+  if (checkError) {
+    console.error('❌ 重複チェックエラー:', checkError);
+    console.error('⚠️ データベース接続の問題が発生しました。記事保存時にも重複エラーが発生する可能性があります');
+    // エラーが発生した場合でも処理を続行（重複の可能性はあるが停止はしない）
+    // この場合、記事保存時にデータベース側の重複制約に依存する
+  }
   
   const existingLinks = new Set(existingArticles?.map(a => a.source_url) || []);
+  console.log(`📊 既存記事数: ${existingLinks.size} 件`);
   
   // 新しい記事のみフィルタリング
   const newArticles = articles.filter(article => {
+    // URLの検証
+    if (!article.source_url || article.source_url.trim() === '') {
+      console.log(`⚠️ 無効なURL: ${article.title}`);
+      stats.errors++;
+      return false;
+    }
+    
     if (existingLinks.has(article.source_url)) {
+      console.log(`🔄 重複記事をスキップ: ${article.title.substring(0, 50)}...`);
       stats.duplicates++;
       return false;
     }
@@ -143,8 +183,15 @@ export async function saveArticlesWithAIAnalysis(articles: Article[]): Promise<C
         .single();
       
       if (saveError) {
-        console.error(`   ❌ 保存失敗: ${saveError.message}`);
-        stats.errors++;
+        // 重複制約エラーの場合は詳細情報を表示
+        if (saveError.message.includes('duplicate key value violates unique constraint')) {
+          console.log(`   🔄 重複記事（事前チェック漏れ）: ${article.title.substring(0, 50)}...`);
+          stats.duplicates++;
+        } else {
+          console.error(`   ❌ 保存失敗: ${saveError.message}`);
+          console.error(`   📄 記事情報: タイトル="${article.title}", URL="${article.source_url}"`);
+          stats.errors++;
+        }
         continue;
       }
       

@@ -132,7 +132,7 @@ URL: ${sourceUrl}
 **事前定義タグ（該当する場合は優先使用）:**
 ${predefinedTagsList || '（該当する事前定義タグなし）'}
 
-**出力形式（JSON）:**
+**出力形式（厳密JSON - エラー防止のため括弧の対応に注意）:**
 {
   "title_ja": "日本語に翻訳されたタイトル",
   "summary": "記事の簡潔な要約（100-150文字）",
@@ -140,14 +140,20 @@ ${predefinedTagsList || '（該当する事前定義タグなし）'}
     {
       "tag_name": "タグ名",
       "confidence_score": 0.9,
-      "category": "company|technology|announcement_type|importance|platform|genre|price_range|rating",
+      "category": "company",
       "is_auto_generated": false
     }
   ],
   "importance_score": 7.5,
-  "sentiment": "positive|neutral|negative",
-  "key_points": ["要点1", "要点2", "要点3"]
+  "sentiment": "neutral",
+  "key_points": ["要点1", "要点2"]
 }
+
+**重要な出力ルール:**
+- JSONの開始は必ず{で、終了は必ず}とする
+- 文字列内の改行や特殊文字は避ける
+- 配列の最後の要素にカンマを付けない
+- 数値は必ず有効な範囲内（importance_score: 1.0-10.0, confidence_score: 0.1-1.0）
 
 **指示:**
 1. **タイトル翻訳（必須）**: 英語タイトルは必ず自然な日本語に翻訳し、"title_ja"に含める
@@ -174,10 +180,47 @@ JSONのみを出力してください。説明文は不要です。
     
     try {
       // Geminiが```json```で囲む場合があるので、それを除去
-      const cleanedResponse = responseText
+      let cleanedResponse = responseText
         .replace(/```json\s*/g, '')
         .replace(/```\s*/g, '')
         .trim();
+
+      // 不完全なJSONの修復を試行
+      if (!cleanedResponse.startsWith('{')) {
+        const jsonStart = cleanedResponse.indexOf('{');
+        if (jsonStart !== -1) {
+          cleanedResponse = cleanedResponse.substring(jsonStart);
+        }
+      }
+
+      // 末尾の不完全な部分を修復
+      if (!cleanedResponse.endsWith('}')) {
+        // 最後の完全な}を見つける
+        let braceCount = 0;
+        let lastValidIndex = -1;
+        for (let i = 0; i < cleanedResponse.length; i++) {
+          if (cleanedResponse[i] === '{') braceCount++;
+          if (cleanedResponse[i] === '}') {
+            braceCount--;
+            if (braceCount === 0) {
+              lastValidIndex = i;
+            }
+          }
+        }
+        if (lastValidIndex !== -1) {
+          cleanedResponse = cleanedResponse.substring(0, lastValidIndex + 1);
+        }
+      }
+
+      // 不正な制御文字やエスケープを修復
+      cleanedResponse = cleanedResponse
+        .replace(/[\x00-\x1F\x7F]/g, '') // 制御文字除去
+        .replace(/\\"/g, '"') // エスケープされた引用符を修復
+        .replace(/([^\\])"/g, '$1"') // 不正なエスケープ修復
+        .replace(/,(\s*[}\]])/g, '$1') // 末尾カンマ除去
+        .replace(/\n|\r/g, ' '); // 改行を空白に置換
+
+      console.log('🔧 清浄化後のJSON:', cleanedResponse.length > 200 ? cleanedResponse.substring(0, 200) + '...' : cleanedResponse);
       
       const analysisResult = JSON.parse(cleanedResponse) as ArticleAnalysisResult;
       
@@ -198,9 +241,20 @@ JSONのみを出力してください。説明文は不要です。
       
     } catch (parseError) {
       console.error('Gemini応答のパース失敗:', parseError);
-      console.log('生の応答:', responseText);
+      console.log('🔍 生の応答 (最初の500文字):', responseText.substring(0, 500));
+      console.log('🔍 応答の長さ:', responseText.length);
+      
+      // より詳細なエラー情報をログ出力
+      if (parseError instanceof SyntaxError) {
+        console.error('🚨 JSON構文エラー詳細:', {
+          message: parseError.message,
+          responsePreview: responseText.substring(0, 200),
+          responseLength: responseText.length
+        });
+      }
       
       // フォールバック: 基本的な分析結果を返す
+      console.log('📝 フォールバック分析を使用');
       return createFallbackAnalysis(title, summary, tagMatch.existingTags);
     }
     
@@ -236,7 +290,7 @@ function createFallbackAnalysis(
 }
 
 /**
- * 分析結果をデータベースに保存
+ * 分析結果をデータベースに保存（再試行機能付き）
  */
 export async function saveArticleAnalysis(
   articleId: string,
