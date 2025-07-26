@@ -94,7 +94,7 @@ export async function collectRSSFeeds(): Promise<Article[]> {
           console.error(`   📊 エラーコード: ${error.code}`);
         }
         if ('response' in error && error.response) {
-          console.error(`   📊 HTTPステータス: ${error.response.statusCode || 'unknown'}`);
+          console.error(`   📊 HTTPステータス: ${(error.response as any).statusCode || 'unknown'}`);
         }
       }
       console.error(`   🔗 URL: ${source.url}`);
