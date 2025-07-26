@@ -23,12 +23,6 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
-    - name: Create environment file
-      run: |
-        echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
-        echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}" >> .env.local
-        echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env.local
-        
     - name: Run RSS Collection with Gemini AI
       run: npx tsx scripts/github-actions-rss-collector.ts
       env:

@@ -20,9 +20,21 @@ async function githubActionsRSSCollection() {
       'GEMINI_API_KEY'
     ]
     
+    console.log('📋 環境変数の状態:')
+    requiredEnvs.forEach(env => {
+      const value = process.env[env]
+      if (value) {
+        console.log(`   ✅ ${env}: ${value.substring(0, 10)}...`)
+      } else {
+        console.log(`   ❌ ${env}: 未設定`)
+      }
+    })
+    
     const missingEnvs = requiredEnvs.filter(env => !process.env[env])
     if (missingEnvs.length > 0) {
-      throw new Error(`❌ 必要な環境変数が設定されていません: ${missingEnvs.join(', ')}`)
+      console.error(`❌ 必要な環境変数が設定されていません: ${missingEnvs.join(', ')}`)
+      console.error('GitHub SecretsでREPOSITORY SECRETSが正しく設定されているか確認してください')
+      throw new Error(`環境変数エラー: ${missingEnvs.join(', ')}`)
     }
     console.log('✅ 環境変数OK')
     
