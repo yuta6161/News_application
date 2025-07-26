@@ -34,15 +34,143 @@ export default function ArticleTagsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const fetchData = useCallback(async () => {
+    const fetchArticlesWithTagsInternal = async () => {
+      try {
+        setIsLoading(true)
+        console.log('🔍 データ取得開始...')
+        
+        // 1. AI分析済み記事を取得
+        const { data: articlesData, error: articlesError } = await supabase
+          .from('news_articles')
+          .select('id, title, source_name, importance_score, ai_summary, published_at')
+          .not('ai_summary', 'is', null)
+          .order('published_at', { ascending: false })
+          .limit(100)
+
+        console.log('📰 記事データ:', articlesData?.length, '件')
+
+        if (articlesError) {
+          console.error('記事取得エラー:', articlesError)
+          throw articlesError
+        }
+
+        if (!articlesData || articlesData.length === 0) {
+          console.log('⚠️ AI分析済み記事なし')
+          setArticles([])
+          return
+        }
+
+        // 2. 各記事のタグを取得
+        const articleIds = articlesData.map(article => article.id)
+        console.log('🔍 タグ取得対象記事ID:', articleIds.length, '件')
+
+        const { data: allTags, error: tagsError } = await supabase
+          .from('article_tags')
+          .select('article_id, tag_name, category, confidence_score, is_auto_generated')
+          .in('article_id', articleIds)
+          .order('confidence_score', { ascending: false })
+
+        console.log('🏷️ 取得タグ数:', allTags?.length, '個')
+
+        if (tagsError) {
+          console.error('タグ取得エラー:', tagsError)
+          // タグエラーでも記事は表示
+        }
+
+        // 3. 記事ごとにタグをグループ化
+        const articlesWithTags: ArticleWithTags[] = articlesData.map(article => {
+          const articleTags = allTags?.filter(tag => tag.article_id === article.id) || []
+          console.log(`📄 "${article.title.substring(0, 30)}..." - タグ: ${articleTags.length}個`)
+          
+          return {
+            ...article,
+            tags: articleTags.map(tag => ({
+              tag_name: tag.tag_name,
+              category: tag.category,
+              confidence_score: tag.confidence_score,
+              is_auto_generated: tag.is_auto_generated
+            }))
+          }
+        })
+
+        console.log('✅ 処理完了:', articlesWithTags.length, '件')
+        setArticles(articlesWithTags)
+      } catch (err) {
+        console.error('❌ データ取得エラー:', err)
+        setError(err instanceof Error ? err.message : '不明なエラー')
+      }
+    }
+
+    const fetchTagSummariesInternal = async () => {
+      try {
+        console.log('🏷️ タグサマリー取得開始...')
+        
+        const { data: allTags, error: tagsError } = await supabase
+          .from('article_tags')
+          .select('tag_name, category, confidence_score, is_auto_generated')
+        
+        if (tagsError) {
+          console.error('タグ取得エラー:', tagsError)
+          throw tagsError
+        }
+
+        if (!allTags || allTags.length === 0) {
+          console.log('⚠️ タグなし')
+          setTagSummaries([])
+          return
+        }
+
+        // タグごとに統計を計算
+        const tagStats: Record<string, TagSummary> = {}
+        
+        allTags.forEach(tag => {
+          if (!tagStats[tag.tag_name]) {
+            tagStats[tag.tag_name] = {
+              tag_name: tag.tag_name,
+              total_usage: 0,
+              is_auto_generated: tag.is_auto_generated,
+              category: tag.category,
+              avg_confidence: 0
+            }
+          }
+          
+          tagStats[tag.tag_name].total_usage++
+          tagStats[tag.tag_name].avg_confidence += tag.confidence_score
+        })
+
+        // 平均信頼度を算出し、配列に変換
+        const summaries = Object.values(tagStats).map(stat => ({
+          ...stat,
+          avg_confidence: stat.avg_confidence / stat.total_usage
+        }))
+
+        // 事前定義タグ優先、その後使用頻度順でソート
+        summaries.sort((a, b) => {
+          if (a.is_auto_generated !== b.is_auto_generated) {
+            return a.is_auto_generated ? 1 : -1 // 事前定義を上位に
+          }
+          return b.total_usage - a.total_usage // 使用頻度順
+        })
+
+        console.log('✅ タグサマリー処理完了:', summaries.length, '種類')
+        setTagSummaries(summaries)
+      } catch (err) {
+        console.error('❌ タグサマリー取得エラー:', err)
+        setError(err instanceof Error ? err.message : '不明なエラー')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    await Promise.all([
+      fetchArticlesWithTagsInternal(),
+      fetchTagSummariesInternal()
+    ])
+  }, [])
+
   useEffect(() => {
     fetchData()
-  }, [fetchData])
-
-  const fetchData = useCallback(async () => {
-    await Promise.all([
-      fetchArticlesWithTags(),
-      fetchTagSummaries()
-    ])
   }, [])
 
   const fetchArticlesWithTags = async () => {
