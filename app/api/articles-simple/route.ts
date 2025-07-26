@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { rssSources } from '@/lib/rss-sources'
 
+// 動的ルートにする（静的ビルドを無効化）
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 シンプル記事API呼び出し開始')
 
     // URLパラメータからカテゴリを取得
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const category = searchParams.get('category')
     
     console.log('📂 指定カテゴリ:', category || 'All')
