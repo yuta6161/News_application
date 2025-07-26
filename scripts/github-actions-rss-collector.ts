@@ -1,7 +1,191 @@
 // GitHub Actions専用RSS収集スクリプト
 // CI環境最適化版（通知機能なし、エラーハンドリング強化）
 
-import { runRSSCollectionWithAI } from '../lib/rss-collector-gemini'
+import Parser from 'rss-parser'
+import { rssSources } from '../lib/rss-sources'
+import { calculateImportanceScore } from '../lib/importance-calculator'
+import { analyzeArticleWithGemini, saveArticleAnalysis } from '../lib/ai/article-analyzer'
+import { checkDuplicateUrls } from '../lib/mcp-supabase-helper'
+
+// GitHub Actions専用のRSS収集関数
+async function runGitHubActionsRSSCollection(supabase: any) {
+  console.log('🌐 RSS収集を開始します...')
+  const allArticles: any[] = []
+  
+  const parser = new Parser({
+    customFields: {
+      item: ['media:content', 'content:encoded', 'dc:creator']
+    }
+  })
+  
+  for (const source of rssSources) {
+    try {
+      console.log(`📡 ${source.name} から取得中... (${source.url})`)
+      const feed = await parser.parseURL(source.url)
+      
+      if (!feed || !feed.items) {
+        console.log(`   ⚠️ ${source.name}: フィードまたは記事が見つかりません`)
+        continue
+      }
+      
+      const articles = feed.items.slice(0, 10).map(item => {
+        const summary = item.contentSnippet || 
+                       (item as any).description || 
+                       (item as any).content || 
+                       'No summary available'
+        
+        const cleanSummary = summary
+          .replace(/<[^>]*>/g, '')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .substring(0, 300)
+        
+        const articleTitle = item.title || 'No title'
+        const finalSummary = cleanSummary + (cleanSummary.length >= 300 ? '...' : '')
+        
+        const importanceScore = calculateImportanceScore(
+          articleTitle,
+          cleanSummary,
+          source
+        )
+        
+        return {
+          title: articleTitle,
+          summary: finalSummary,
+          source_url: item.link || '',
+          published_at: item.pubDate || new Date().toISOString(),
+          source_name: source.name,
+          category: source.category,
+          original_language: source.language,
+          importance_score: importanceScore,
+          ai_summary: undefined
+        }
+      })
+      
+      allArticles.push(...articles)
+      console.log(`   ✅ ${articles.length} 件の記事を取得`)
+      
+    } catch (error) {
+      console.error(`   ❌ ${source.name} の取得中にエラー:`, error)
+    }
+  }
+  
+  console.log(`📊 合計 ${allArticles.length} 件の記事を収集しました`)
+  
+  // 記事を保存してAI分析
+  return await saveArticlesWithAI(supabase, allArticles)
+}
+
+// GitHub Actions専用の記事保存+AI分析関数
+async function saveArticlesWithAI(supabase: any, articles: any[]) {
+  console.log('💾 記事の保存とAI分析を開始...')
+  
+  const stats = {
+    totalCollected: articles.length,
+    newArticles: 0,
+    duplicates: 0,
+    aiAnalyzed: 0,
+    errors: 0
+  }
+  
+  if (articles.length === 0) {
+    return { success: true, stats }
+  }
+  
+  // 重複チェック
+  const articleUrls = articles.map(a => a.source_url).filter(url => url && url.trim() !== '')
+  const existingLinks = await checkDuplicateUrls(articleUrls)
+  console.log(`📊 既存記事数: ${existingLinks.size} 件`)
+  
+  const newArticles = articles.filter(article => {
+    if (!article.source_url || article.source_url.trim() === '') {
+      stats.errors++
+      return false
+    }
+    
+    if (existingLinks.has(article.source_url)) {
+      stats.duplicates++
+      return false
+    }
+    return true
+  })
+  
+  if (newArticles.length === 0) {
+    console.log('🔄 新しい記事はありません（全て重複）')
+    return { success: true, stats }
+  }
+  
+  console.log(`📝 ${newArticles.length} 件の新記事を処理中...`)
+  stats.newArticles = newArticles.length
+  
+  // 各記事を個別に処理
+  for (let i = 0; i < newArticles.length; i++) {
+    const article = newArticles[i]
+    const progress = `[${i + 1}/${newArticles.length}]`
+    
+    try {
+      console.log(`${progress} 処理中: ${article.title.substring(0, 50)}...`)
+      
+      // 記事をデータベースに保存
+      const { data: savedArticle, error: saveError } = await supabase
+        .from('news_articles')
+        .insert(article)
+        .select('id')
+        .single()
+      
+      if (saveError) {
+        if (saveError.message.includes('duplicate key value violates unique constraint')) {
+          stats.duplicates++
+        } else {
+          console.error(`   ❌ 保存失敗: ${saveError.message}`)
+          stats.errors++
+        }
+        continue
+      }
+      
+      const articleId = savedArticle.id
+      console.log(`   ✅ 記事保存完了 (ID: ${articleId})`)
+      
+      // Geminiによる記事分析
+      try {
+        console.log(`   🤖 Gemini分析中...`)
+        
+        const analysisResult = await analyzeArticleWithGemini(
+          article.title,
+          article.summary,
+          article.source_url,
+          article.source_name
+        )
+        
+        await saveArticleAnalysis(articleId, analysisResult)
+        
+        if (analysisResult.title_ja && article.original_language !== 'ja') {
+          await supabase
+            .from('news_articles')
+            .update({ title: analysisResult.title_ja })
+            .eq('id', articleId)
+          
+          console.log(`   ✅ タイトルを日本語に更新: ${analysisResult.title_ja.substring(0, 40)}...`)
+        }
+        
+        stats.aiAnalyzed++
+        console.log(`   ✅ AI分析完了 (重要度: ${analysisResult.importance_score})`)
+        
+        // API制限対策
+        await new Promise(resolve => setTimeout(resolve, 500))
+        
+      } catch (analysisError) {
+        console.error(`   ⚠️ AI分析エラー:`, analysisError)
+      }
+      
+    } catch (error) {
+      console.error(`${progress} 記事処理エラー:`, error)
+      stats.errors++
+    }
+  }
+  
+  return { success: true, stats }
+}
 
 async function githubActionsRSSCollection() {
   console.log('🚀 GitHub Actions RSS自動収集開始...')
@@ -38,9 +222,20 @@ async function githubActionsRSSCollection() {
     }
     console.log('✅ 環境変数OK')
     
+    // GitHub Actions用のSupabase初期化
+    console.log('\n📡 GitHub Actions用Supabase初期化...')
+    
+    // 環境変数から動的にSupabaseクライアントを作成
+    const { createClient } = await import('@supabase/supabase-js')
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+    
+    const dynamicSupabase = createClient(supabaseUrl, supabaseKey)
+    console.log('✅ Supabaseクライアント初期化完了')
+    
     // RSS収集とAI分析を実行
     console.log('\n📡 RSS収集とGemini AI分析を開始...')
-    const result = await runRSSCollectionWithAI()
+    const result = await runGitHubActionsRSSCollection(dynamicSupabase)
     
     const endTime = Date.now()
     const duration = Math.round((endTime - startTime) / 1000)
@@ -65,7 +260,7 @@ async function githubActionsRSSCollection() {
       }
       
       // データベース統計を表示
-      await printDatabaseStats()
+      await printDatabaseStats(dynamicSupabase)
       
       // 成功ログの出力
       console.log(`\n✅ RSS自動収集が正常に完了しました`)
@@ -139,11 +334,9 @@ ${error instanceof Error ? error.message : String(error)}
   }
 }
 
-async function printDatabaseStats() {
+async function printDatabaseStats(supabase: any) {
   try {
     console.log('\n📊 データベース統計情報:')
-    
-    const { supabase } = await import('../lib/supabase')
     
     // 全記事数
     const { data: allArticles, error: articlesError } = await supabase
