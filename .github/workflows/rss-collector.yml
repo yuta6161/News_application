@@ -1,0 +1,45 @@
+name: RSS Auto Collection with Gemini AI
+
+on:
+  schedule:
+    # 毎時0分に実行（UTCタイム）
+    - cron: '0 * * * *'
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  collect-rss:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create environment file
+      run: |
+        echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+        echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}" >> .env.local
+        echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env.local
+        
+    - name: Run RSS Collection with Gemini AI
+      run: npx tsx scripts/github-actions-rss-collector.ts
+      env:
+        NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        
+    - name: Report collection results
+      if: always()
+      run: |
+        echo "RSS収集ジョブが完了しました"
+        echo "実行時刻: $(date)"
+        echo "リポジトリ: ${{ github.repository }}"
+        echo "ブランチ: ${{ github.ref }}"

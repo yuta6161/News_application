@@ -4716,3 +4716,276 @@ Import trace for requested module:
  ✓ Compiled in 422ms (923 modules)
  ✓ Compiled in 873ms (923 modules)
  ✓ Compiled in 953ms (923 modules)
+ ✓ Compiled in 3.2s (520 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 780ms (912 modules)
+ GET /_next/static/css/app/layout.css?v=1753570490946 404 in 999ms
+ GET /_next/static/css/app/layout.css?v=1753570490946 404 in 22ms
+ ✓ Compiled in 255ms (522 modules)
+ ⨯ Error: Cannot find module './948.js'
+Require stack:
+- /home/lain6161/News_application/.next/server/webpack-runtime.js
+- /home/lain6161/News_application/.next/server/app/_not-found/page.js
+- /home/lain6161/News_application/node_modules/next/dist/server/require.js
+- /home/lain6161/News_application/node_modules/next/dist/server/load-components.js
+- /home/lain6161/News_application/node_modules/next/dist/build/utils.js
+- /home/lain6161/News_application/node_modules/next/dist/server/dev/hot-middleware.js
+- /home/lain6161/News_application/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/home/lain6161/News_application/.next/server/webpack-runtime.js:198:28)
+    at /home/lain6161/News_application/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/home/lain6161/News_application/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/home/lain6161/News_application/.next/server/webpack-runtime.js:162:22)
+    at /home/lain6161/News_application/.next/server/app/rss-sources/page.js:1:20063
+    at Object.<anonymous> (/home/lain6161/News_application/.next/server/app/rss-sources/page.js:1:20116)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/home/lain6161/News_application/node_modules/next/dist/server/require.js:109:84)
+    at /home/lain6161/News_application/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/home/lain6161/News_application/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/home/lain6161/News_application/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/home/lain6161/News_application/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (/home/lain6161/News_application/node_modules/next/dist/server/base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (/home/lain6161/News_application/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/lain6161/News_application/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/lain6161/News_application/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/lain6161/News_application/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/lain6161/News_application/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/lain6161/News_application/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/lain6161/News_application/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/lain6161/News_application/.next/server/webpack-runtime.js',
+    '/home/lain6161/News_application/.next/server/app/_not-found/page.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/require.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/load-components.js',
+    '/home/lain6161/News_application/node_modules/next/dist/build/utils.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js'
+  ],
+  page: '/rss-sources'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 702ms (914 modules)
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- /home/lain6161/News_application/.next/server/webpack-runtime.js
+- /home/lain6161/News_application/.next/server/pages/_document.js
+- /home/lain6161/News_application/node_modules/next/dist/server/require.js
+- /home/lain6161/News_application/node_modules/next/dist/server/load-components.js
+- /home/lain6161/News_application/node_modules/next/dist/build/utils.js
+- /home/lain6161/News_application/node_modules/next/dist/server/dev/hot-middleware.js
+- /home/lain6161/News_application/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/home/lain6161/News_application/.next/server/webpack-runtime.js:198:28)
+    at /home/lain6161/News_application/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/home/lain6161/News_application/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/home/lain6161/News_application/.next/server/webpack-runtime.js:162:22)
+    at /home/lain6161/News_application/.next/server/pages/_document.js:1:335
+    at Object.<anonymous> (/home/lain6161/News_application/.next/server/pages/_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/home/lain6161/News_application/node_modules/next/dist/server/require.js:109:84)
+    at /home/lain6161/News_application/node_modules/next/dist/server/load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (/home/lain6161/News_application/node_modules/next/dist/server/load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (/home/lain6161/News_application/node_modules/next/dist/server/next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/lain6161/News_application/.next/server/webpack-runtime.js',
+    '/home/lain6161/News_application/.next/server/pages/_document.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/require.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/load-components.js',
+    '/home/lain6161/News_application/node_modules/next/dist/build/utils.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './948.js'
+Require stack:
+- /home/lain6161/News_application/.next/server/webpack-runtime.js
+- /home/lain6161/News_application/.next/server/pages/_document.js
+- /home/lain6161/News_application/node_modules/next/dist/server/require.js
+- /home/lain6161/News_application/node_modules/next/dist/server/load-components.js
+- /home/lain6161/News_application/node_modules/next/dist/build/utils.js
+- /home/lain6161/News_application/node_modules/next/dist/server/dev/hot-middleware.js
+- /home/lain6161/News_application/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/home/lain6161/News_application/.next/server/webpack-runtime.js:198:28)
+    at /home/lain6161/News_application/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/home/lain6161/News_application/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/home/lain6161/News_application/.next/server/webpack-runtime.js:162:22)
+    at /home/lain6161/News_application/.next/server/app/rss-sources/page.js:1:20063
+    at Object.<anonymous> (/home/lain6161/News_application/.next/server/app/rss-sources/page.js:1:20116)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/home/lain6161/News_application/node_modules/next/dist/server/require.js:109:84)
+    at /home/lain6161/News_application/node_modules/next/dist/server/load-components.js:103:84
+    at async loadComponentsImpl (/home/lain6161/News_application/node_modules/next/dist/server/load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (/home/lain6161/News_application/node_modules/next/dist/server/next-server.js:714:36)
+    at async DevServer.findPageComponents (/home/lain6161/News_application/node_modules/next/dist/server/dev/next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (/home/lain6161/News_application/node_modules/next/dist/server/base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (/home/lain6161/News_application/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/lain6161/News_application/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/lain6161/News_application/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/lain6161/News_application/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/lain6161/News_application/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/lain6161/News_application/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/lain6161/News_application/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/lain6161/News_application/.next/server/webpack-runtime.js',
+    '/home/lain6161/News_application/.next/server/pages/_document.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/require.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/load-components.js',
+    '/home/lain6161/News_application/node_modules/next/dist/build/utils.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js'
+  ],
+  page: '/rss-sources'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- /home/lain6161/News_application/.next/server/webpack-runtime.js
+- /home/lain6161/News_application/.next/server/pages/_document.js
+- /home/lain6161/News_application/node_modules/next/dist/server/require.js
+- /home/lain6161/News_application/node_modules/next/dist/server/load-components.js
+- /home/lain6161/News_application/node_modules/next/dist/build/utils.js
+- /home/lain6161/News_application/node_modules/next/dist/server/dev/hot-middleware.js
+- /home/lain6161/News_application/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js
+- /home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1401:15)
+    at /home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at __webpack_require__.f.require (/home/lain6161/News_application/.next/server/webpack-runtime.js:198:28)
+    at /home/lain6161/News_application/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/home/lain6161/News_application/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/home/lain6161/News_application/.next/server/webpack-runtime.js:162:22)
+    at /home/lain6161/News_application/.next/server/pages/_document.js:1:335
+    at Object.<anonymous> (/home/lain6161/News_application/.next/server/pages/_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1487:12)
+    at mod.require (/home/lain6161/News_application/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:135:16)
+    at requirePage (/home/lain6161/News_application/node_modules/next/dist/server/require.js:109:84)
+    at /home/lain6161/News_application/node_modules/next/dist/server/load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (/home/lain6161/News_application/node_modules/next/dist/server/load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (/home/lain6161/News_application/node_modules/next/dist/server/next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/lain6161/News_application/.next/server/webpack-runtime.js',
+    '/home/lain6161/News_application/.next/server/pages/_document.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/require.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/load-components.js',
+    '/home/lain6161/News_application/node_modules/next/dist/build/utils.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/router-server.js',
+    '/home/lain6161/News_application/node_modules/next/dist/server/lib/start-server.js'
+  ]
+}
+ GET /rss-sources 500 in 21ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 100ms
+ GET /_next/static/chunks/fallback/webpack.js 404 in 57ms
+ GET /_next/static/chunks/fallback/main.js 404 in 52ms
+ GET /_next/static/chunks/fallback/react-refresh.js 404 in 49ms
+ GET /_next/static/chunks/fallback/pages/_app.js 404 in 29ms
+ GET /_next/static/chunks/fallback/pages/_error.js 404 in 33ms
