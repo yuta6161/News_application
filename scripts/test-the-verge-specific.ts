@@ -29,7 +29,7 @@ async function testTheVergeSpecific() {
     const item = feed.items[0];
     const article = {
       title: item.title || 'No title',
-      summary: (item.contentSnippet || item.description || 'No summary').substring(0, 300),
+      summary: (item.contentSnippet || (item as any).description || 'No summary').substring(0, 300),
       source_url: item.link || '',
       published_at: item.pubDate || new Date().toISOString(),
       source_name: 'The Verge',

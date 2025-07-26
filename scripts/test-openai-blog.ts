@@ -29,7 +29,7 @@ async function testOpenAIBlog() {
       console.log(`\n${i+1}. ${item.title}`);
       console.log(`   🔗 URL: ${item.link}`);
       console.log(`   📅 公開日: ${item.pubDate}`);
-      console.log(`   📝 要約: ${(item.contentSnippet || item.description || 'なし').substring(0, 100)}...`);
+      console.log(`   📝 要約: ${(item.contentSnippet || (item as any).description || 'なし').substring(0, 100)}...`);
     }
     
     console.log('\n✅ OpenAI Blog RSS取得テスト完了！');
@@ -46,7 +46,7 @@ async function testOpenAIBlog() {
         console.error(`   📊 エラーメッセージ: ${error.message}`);
       }
       if ('response' in error && error.response) {
-        console.error(`   📊 HTTPステータス: ${error.response.statusCode || 'unknown'}`);
+        console.error(`   📊 HTTPステータス: ${(error.response as any)?.statusCode || 'unknown'}`);
       }
     }
     
@@ -63,7 +63,7 @@ async function testOpenAIBlog() {
       const { stdout, stderr } = await execPromise('curl -I "https://openai.com/blog/rss.xml"');
       console.log('   ✅ curl結果:', stdout.split('\n')[0]);
     } catch (curlError) {
-      console.log('   ❌ curl失敗:', curlError.message);
+      console.log('   ❌ curl失敗:', (curlError as any).message);
     }
   }
 }

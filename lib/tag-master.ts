@@ -3,7 +3,7 @@
 
 export interface InitialTag {
   tag_name: string;
-  category: 'company' | 'technology' | 'announcement_type' | 'importance' | 'platform' | 'genre' | 'price_range' | 'rating';
+  category: 'company' | 'technology' | 'announcement_type' | 'importance' | 'platform' | 'genre' | 'price_range' | 'rating' | 'topic' | 'source_type';
   parent_category: string;
   description: string;
   base_reliability: number; // 1.0-10.0

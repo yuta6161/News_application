@@ -106,11 +106,11 @@ async function generateTagReport() {
 
       // 記事情報の集計
       const articles = taggedArticles.map(ta => ({
-        title: ta.news_articles.title,
-        source_name: ta.news_articles.source_name,
-        category: ta.news_articles.category,
-        importance_score: ta.news_articles.importance_score,
-        published_at: ta.news_articles.published_at,
+        title: (ta.news_articles as any)?.title,
+        source_name: (ta.news_articles as any)?.source_name,
+        category: (ta.news_articles as any)?.category,
+        importance_score: (ta.news_articles as any)?.importance_score,
+        published_at: (ta.news_articles as any)?.published_at,
         confidence_score: ta.confidence_score
       }));
 
@@ -141,7 +141,7 @@ async function generateTagReport() {
           .neq('tag_id', tag.id);
 
         coTags?.forEach(ct => {
-          const tagName = ct.tag_master.tag_name;
+          const tagName = (ct.tag_master as any)?.tag_name;
           coOccurringTags[tagName] = (coOccurringTags[tagName] || 0) + 1;
         });
       }

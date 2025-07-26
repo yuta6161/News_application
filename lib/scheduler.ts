@@ -1,7 +1,7 @@
 // lib/scheduler.ts
 // RSS収集の自動スケジューラー
 
-import cron from 'node-cron';
+import * as cron from 'node-cron';
 import { runRSSCollectionWithAI } from './rss-collector-gemini';
 
 let isRunning = false;
@@ -35,15 +35,12 @@ export function startRSSScheduler() {
     } finally {
       isRunning = false;
     }
-  }, {
-    scheduled: false, // 手動で開始
-    timezone: 'Asia/Tokyo'
   });
 
   return scheduler;
 }
 
-export function stopRSSScheduler(scheduler: cron.ScheduledTask) {
+export function stopRSSScheduler(scheduler: any) {
   scheduler.destroy();
   console.log('🛑 RSS収集スケジューラーを停止しました');
 }
@@ -63,8 +60,5 @@ export function startTestScheduler() {
     } finally {
       isRunning = false;
     }
-  }, {
-    scheduled: false,
-    timezone: 'Asia/Tokyo'
   });
 }

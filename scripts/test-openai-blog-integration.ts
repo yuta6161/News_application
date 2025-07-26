@@ -39,7 +39,7 @@ async function testOpenAIBlogIntegration() {
       if (!existing) {
         newArticle = {
           title: item.title || 'No title',
-          summary: (item.contentSnippet || item.description || 'No summary').substring(0, 300),
+          summary: (item.contentSnippet || (item as any).description || 'No summary').substring(0, 300),
           source_url: item.link || '',
           published_at: item.pubDate || new Date().toISOString(),
           source_name: 'OpenAI Blog',

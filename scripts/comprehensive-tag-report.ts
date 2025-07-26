@@ -90,8 +90,8 @@ async function generateComprehensiveTagReport() {
       
       if (stats.sample_articles.length < 3) {
         stats.sample_articles.push({
-          title: usage.news_articles.title,
-          source_name: usage.news_articles.source_name,
+          title: (usage.news_articles as any)?.title,
+          source_name: (usage.news_articles as any)?.source_name,
           confidence_score: usage.confidence_score
         });
       }
