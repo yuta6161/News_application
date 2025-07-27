@@ -188,11 +188,14 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
           }
           
           // 記事とタグの関連付け
+          const validCategory = mapToValidCategory(tag.category)
           await supabase
             .from('article_tags')
             .insert({
               article_id: articleId,
               tag_id: tagId,
+              tag_name: tag.tag_name,      // フロントエンド表示用
+              category: validCategory,     // フロントエンド表示用  
               confidence_score: tag.confidence_score || 0.8,
               is_auto_generated: true
             })
