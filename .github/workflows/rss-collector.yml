@@ -24,7 +24,8 @@ jobs:
       run: npm ci
       
     - name: Run RSS Collection with Gemini AI
-      run: npx tsx scripts/github-actions-rss-collector.ts
+      run: timeout 480 npx tsx scripts/github-actions-rss-collector.ts
+      timeout-minutes: 9
       env:
         NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
         NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}

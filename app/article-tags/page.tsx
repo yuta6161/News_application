@@ -46,7 +46,7 @@ export default function ArticleTagsPage() {
           .select('id, title, source_name, importance_score, ai_summary, published_at')
           .not('ai_summary', 'is', null)
           .order('published_at', { ascending: false })
-          .limit(100)
+          .limit(500)
 
         console.log('📰 記事データ:', articlesData?.length, '件')
 
@@ -184,7 +184,7 @@ export default function ArticleTagsPage() {
         .select('id, title, source_name, importance_score, ai_summary, published_at')
         .not('ai_summary', 'is', null)
         .order('published_at', { ascending: false })
-        .limit(100)
+        .limit(500)
 
       console.log('📰 記事データ:', articlesData?.length, '件')
 
