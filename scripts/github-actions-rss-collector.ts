@@ -15,7 +15,16 @@ async function analyzeArticleWithGemini(title: string, summary: string, url: str
 要約: ${summary}
 ソース: ${source}
 
-以下のJSON形式で回答してください：
+以下のJSON形式で回答してください。categoryは必ず以下の8つから選んでください：
+- company: 企業、会社、クラブ、チーム、組織
+- person: 人物、選手、CEO、政治家、著名人
+- technology: 技術、AI、ソフトウェア、ハードウェア、IT関連
+- platform: サービス、プラットフォーム、リーグ、大会、SNS
+- genre: 分野、スポーツ、エンタメ、音楽、映画、地域、災害、健康
+- announcement_type: 発表、リリース、更新、移籍、ニュース
+- importance: 重要度、緊急、警告、注意
+- event: イベント、会議、開催、発売、リリース
+
 {
   "title_ja": "日本語のタイトル（英語の場合のみ）",
   "summary": "150文字以内の要約",
