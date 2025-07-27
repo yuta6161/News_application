@@ -128,8 +128,20 @@ function mapToValidCategory(geminiCategory: string): string {
       category.includes('movie') || category.includes('スポーツ') ||
       category.includes('エンタメ') || category.includes('ゲーム') ||
       category.includes('音楽') || category.includes('映画') ||
-      category.includes('サッカー') || category.includes('野球')) {
+      category.includes('サッカー') || category.includes('野球') ||
+      category.includes('natural_phenomenon') || category.includes('disaster') ||
+      category.includes('weather_phenomenon') || category.includes('geography') ||
+      category.includes('地域') || category.includes('災害') ||
+      category.includes('天気') || category.includes('気象') ||
+      category.includes('現象')) {
     return 'genre'
+  }
+  
+  // 警告・注意関連は重要度として扱う
+  if (category.includes('warning') || category.includes('alert') ||
+      category.includes('danger') || category.includes('警告') ||
+      category.includes('注意') || category.includes('危険')) {
+    return 'importance'
   }
   
   // デフォルトは技術カテゴリ
@@ -151,6 +163,10 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
       
       for (const tag of analysis.tags) {
         try {
+          // カテゴリを事前にマッピング（1回のみ）
+          const validCategory = mapToValidCategory(tag.category)
+          const validReliability = Math.max(1.0, Math.min(10.0, (tag.confidence_score || 0.8) * 10))
+          
           // タグマスターに存在するか確認・作成
           let { data: existingTag } = await supabase
             .from('tag_master')
@@ -161,11 +177,6 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
           let tagId
           if (!existingTag) {
             // 新しいタグを作成
-            // カテゴリを有効な値にマッピング
-            const validCategory = mapToValidCategory(tag.category)
-            // reliabilityを有効な範囲に調整
-            const validReliability = Math.max(1.0, Math.min(10.0, (tag.confidence_score || 0.8) * 10))
-            
             const { data: newTag, error: tagError } = await supabase
               .from('tag_master')
               .insert({
@@ -188,7 +199,6 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
           }
           
           // 記事とタグの関連付け
-          const validCategory = mapToValidCategory(tag.category)
           await supabase
             .from('article_tags')
             .insert({
