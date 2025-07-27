@@ -60,30 +60,39 @@ export default function ArticleTagsPage() {
           return
         }
 
-        // 2. 各記事のタグを取得
+        // 2. 各記事のタグを取得（バッチ処理）
         const articleIds = articlesData.map(article => article.id)
         console.log('🔍 タグ取得対象記事ID:', articleIds.length, '件')
-        console.log('📋 最初の5つのID:', articleIds.slice(0, 5))
-
-        const { data: allTags, error: tagsError } = await supabase
-          .from('article_tags')
-          .select('article_id, tag_name, category, confidence_score, is_auto_generated')
-          .in('article_id', articleIds)
-          .order('confidence_score', { ascending: false })
-          .limit(10000)  // 制限を明示的に増やす
-
-        console.log('🏷️ 取得タグ数:', allTags?.length, '個')
-        console.log('🔍 タグクエリ結果:', { allTags, tagsError })
-
-        if (tagsError) {
-          console.error('❌ タグ取得エラー詳細:', {
-            message: tagsError.message,
-            details: tagsError.details,
-            hint: tagsError.hint,
-            code: tagsError.code
-          })
-          // タグエラーでも記事は表示
+        
+        // IDを50個ずつのバッチに分割
+        const batchSize = 50
+        const batches = []
+        for (let i = 0; i < articleIds.length; i += batchSize) {
+          batches.push(articleIds.slice(i, i + batchSize))
         }
+        console.log(`📦 ${batches.length}個のバッチに分割`)
+        
+        // 各バッチでタグを取得
+        let allTags = []
+        for (let i = 0; i < batches.length; i++) {
+          const batch = batches[i]
+          const { data: batchTags, error: batchError } = await supabase
+            .from('article_tags')
+            .select('article_id, tag_name, category, confidence_score, is_auto_generated')
+            .in('article_id', batch)
+            .order('confidence_score', { ascending: false })
+          
+          if (batchError) {
+            console.error(`❌ バッチ${i + 1}エラー:`, batchError.message)
+            continue
+          }
+          
+          if (batchTags) {
+            allTags = [...allTags, ...batchTags]
+          }
+        }
+        
+        console.log('🏷️ 取得タグ数:', allTags.length, '個')
 
         // 3. 記事ごとにタグをグループ化
         const articlesWithTags: ArticleWithTags[] = articlesData.map(article => {
@@ -207,30 +216,39 @@ export default function ArticleTagsPage() {
         return
       }
 
-      // 2. 各記事のタグを一括取得（効率化）
+      // 2. 各記事のタグを取得（バッチ処理）
       const articleIds = articlesData.map(article => article.id)
       console.log('🔍 タグ取得対象記事ID:', articleIds.length, '件')
-      console.log('📋 最初の5つのID:', articleIds.slice(0, 5))
-
-      const { data: allTags, error: tagsError } = await supabase
-        .from('article_tags')
-        .select('article_id, tag_name, category, confidence_score, is_auto_generated')
-        .in('article_id', articleIds)
-        .order('confidence_score', { ascending: false })
-        .limit(10000)  // 制限を明示的に増やす
-
-      console.log('🏷️ 取得タグ数:', allTags?.length, '個')
-      console.log('🔍 タグクエリ結果:', { allTags, tagsError })
-
-      if (tagsError) {
-        console.error('❌ タグ取得エラー詳細:', {
-          message: tagsError.message,
-          details: tagsError.details,
-          hint: tagsError.hint,
-          code: tagsError.code
-        })
-        // タグエラーでも記事は表示
+      
+      // IDを50個ずつのバッチに分割
+      const batchSize = 50
+      const batches = []
+      for (let i = 0; i < articleIds.length; i += batchSize) {
+        batches.push(articleIds.slice(i, i + batchSize))
       }
+      console.log(`📦 ${batches.length}個のバッチに分割`)
+      
+      // 各バッチでタグを取得
+      let allTags = []
+      for (let i = 0; i < batches.length; i++) {
+        const batch = batches[i]
+        const { data: batchTags, error: batchError } = await supabase
+          .from('article_tags')
+          .select('article_id, tag_name, category, confidence_score, is_auto_generated')
+          .in('article_id', batch)
+          .order('confidence_score', { ascending: false })
+        
+        if (batchError) {
+          console.error(`❌ バッチ${i + 1}エラー:`, batchError.message)
+          continue
+        }
+        
+        if (batchTags) {
+          allTags = [...allTags, ...batchTags]
+        }
+      }
+      
+      console.log('🏷️ 取得タグ数:', allTags.length, '個')
 
       // 3. 記事ごとにタグをグループ化
       const articlesWithTags: ArticleWithTags[] = articlesData.map(article => {
