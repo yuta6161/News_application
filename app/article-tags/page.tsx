@@ -63,6 +63,7 @@ export default function ArticleTagsPage() {
         // 2. 各記事のタグを取得
         const articleIds = articlesData.map(article => article.id)
         console.log('🔍 タグ取得対象記事ID:', articleIds.length, '件')
+        console.log('📋 最初の5つのID:', articleIds.slice(0, 5))
 
         const { data: allTags, error: tagsError } = await supabase
           .from('article_tags')
@@ -72,9 +73,15 @@ export default function ArticleTagsPage() {
           .limit(10000)  // 制限を明示的に増やす
 
         console.log('🏷️ 取得タグ数:', allTags?.length, '個')
+        console.log('🔍 タグクエリ結果:', { allTags, tagsError })
 
         if (tagsError) {
-          console.error('タグ取得エラー:', tagsError)
+          console.error('❌ タグ取得エラー詳細:', {
+            message: tagsError.message,
+            details: tagsError.details,
+            hint: tagsError.hint,
+            code: tagsError.code
+          })
           // タグエラーでも記事は表示
         }
 
@@ -203,6 +210,7 @@ export default function ArticleTagsPage() {
       // 2. 各記事のタグを一括取得（効率化）
       const articleIds = articlesData.map(article => article.id)
       console.log('🔍 タグ取得対象記事ID:', articleIds.length, '件')
+      console.log('📋 最初の5つのID:', articleIds.slice(0, 5))
 
       const { data: allTags, error: tagsError } = await supabase
         .from('article_tags')
@@ -212,9 +220,15 @@ export default function ArticleTagsPage() {
         .limit(10000)  // 制限を明示的に増やす
 
       console.log('🏷️ 取得タグ数:', allTags?.length, '個')
+      console.log('🔍 タグクエリ結果:', { allTags, tagsError })
 
       if (tagsError) {
-        console.error('タグ取得エラー:', tagsError)
+        console.error('❌ タグ取得エラー詳細:', {
+          message: tagsError.message,
+          details: tagsError.details,
+          hint: tagsError.hint,
+          code: tagsError.code
+        })
         // タグエラーでも記事は表示
       }
 
