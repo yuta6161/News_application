@@ -122,14 +122,32 @@ export default function ArticleTagsPage() {
       try {
         console.log('🏷️ タグサマリー取得開始...')
         
-        const { data: allTags, error: tagsError } = await supabase
-          .from('article_tags')
-          .select('tag_name, category, confidence_score, is_auto_generated')
+        // バッチ処理でタグを取得（制限回避）
+        let allTags = []
+        const limit = 1000
+        let offset = 0
+        let hasMore = true
         
-        if (tagsError) {
-          console.error('タグ取得エラー:', tagsError)
-          throw tagsError
+        while (hasMore) {
+          const { data: batch, error: tagsError } = await supabase
+            .from('article_tags')
+            .select('tag_name, category, confidence_score, is_auto_generated')
+            .range(offset, offset + limit - 1)
+          
+          if (tagsError) {
+            console.error('タグ取得エラー:', tagsError)
+            break
+          }
+          
+          if (batch) {
+            allTags = [...allTags, ...batch]
+            offset += limit
+            hasMore = batch.length === limit
+          } else {
+            hasMore = false
+          }
         }
+        
 
         if (!allTags || allTags.length === 0) {
           console.log('⚠️ タグなし')
@@ -283,14 +301,32 @@ export default function ArticleTagsPage() {
     try {
       console.log('🏷️ タグサマリー取得開始...')
       
-      const { data: allTags, error: tagsError } = await supabase
-        .from('article_tags')
-        .select('tag_name, category, confidence_score, is_auto_generated')
+      // バッチ処理でタグを取得（制限回避）
+      let allTags = []
+      const limit = 1000
+      let offset = 0
+      let hasMore = true
       
-      if (tagsError) {
-        console.error('タグ取得エラー:', tagsError)
-        throw tagsError
+      while (hasMore) {
+        const { data: batch, error: tagsError } = await supabase
+          .from('article_tags')
+          .select('tag_name, category, confidence_score, is_auto_generated')
+          .range(offset, offset + limit - 1)
+        
+        if (tagsError) {
+          console.error('タグ取得エラー:', tagsError)
+          break
+        }
+        
+        if (batch) {
+          allTags = [...allTags, ...batch]
+          offset += limit
+          hasMore = batch.length === limit
+        } else {
+          hasMore = false
+        }
       }
+      
 
       console.log('📊 取得タグ数:', allTags?.length, '個')
 
