@@ -1,0 +1,387 @@
+
+> ai-news-app@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.30
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.3s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 573ms (72 modules)
+ ○ Compiling /article-tags ...
+ ✓ Compiled /article-tags in 5.2s (675 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
+ GET /article-tags 200 in 5703ms
+ ✓ Compiled in 501ms (322 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 5s (655 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 5107ms
+ ✓ Compiled in 481ms (666 modules)
+ ✓ Compiled in 147ms (322 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  enable debug logging with { debug: true })
+ GET /article-tags 200 in 183ms
+ ✓ Compiled /_not-found in 387ms (655 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 489ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' })
+ GET /article-tags 200 in 90ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 30ms
+ GET /article-tags 200 in 116ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 61ms
+ GET /article-tags 200 in 43ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 48ms
+ GET /article-tags 200 in 34ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 37ms
+ GET /article-tags 200 in 83ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 48ms
+ GET /article-tags 200 in 228ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 131ms
+ GET /article-tags 200 in 59ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 50ms
+ GET /article-tags 200 in -2456ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 33ms
+ GET /article-tags 200 in 40ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 30ms
+ GET /article-tags 200 in 65ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 42ms
+ GET /article-tags 200 in 26ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 62ms
+ GET /article-tags 200 in 39ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 31ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1344ms (665 modules)
+ ○ Compiling /api/articles-simple ...
+ ✓ Compiled /api/articles-simple in 970ms (466 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 292 件
+ GET /api/articles-simple 200 in 1753ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 292 件
+ GET /api/articles-simple 200 in 137ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 292 件
+ GET /api/articles-simple 200 in 213ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 292 件
+ GET /api/articles-simple 200 in 212ms
+ ✓ Compiled /rss-sources in 348ms (788 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  write to custom object with { processEnv: myObject })
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 292 件
+ GET /api/articles-simple 200 in 256ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 292 件
+ GET /api/articles-simple 200 in 137ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild)
+ GET /article-tags 200 in 116ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 30ms
+ GET /article-tags 200 in 26ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 27ms
+ GET /article-tags 200 in 22ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 20ms
+ GET /article-tags 200 in 353ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 70ms
+ GET /article-tags 200 in 73ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 35ms
+ GET /article-tags 200 in 282ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 68ms
+ GET /article-tags 200 in 51ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 55ms
+ ✓ Compiled in 5.5s (684 modules)
+ ✓ Compiled in 403ms (684 modules)
+ ✓ Compiled in 810ms (684 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`)
+ GET /article-tags 200 in 344ms
+ ✓ Compiled /_not-found in 443ms (673 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 613ms
+ ✓ Compiled in 495ms (687 modules)
+ ✓ Compiled in 484ms (687 modules)
+ ✓ Compiled in 529ms (684 modules)
+ ✓ Compiled in 298ms (684 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] })
+ GET /article-tags 200 in 243ms
+ ✓ Compiled /_not-found in 328ms (673 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 399ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  write to custom object with { processEnv: myObject })
+ GET /article-tags 200 in 97ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 24ms
+ GET /article-tags 200 in 101ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 47ms
+ GET /article-tags 200 in 113ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 50ms
+ GET /article-tags 200 in 53ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 70ms
+ GET /article-tags 200 in 379ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 69ms
+ GET /article-tags 200 in 452ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 108ms
+ GET /article-tags 200 in 200ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 77ms
+ GET /article-tags 200 in 113ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 36ms
+ ○ Compiling /api/articles-simple ...
+ ✓ Compiled /api/articles-simple in 3s (471 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  override existing env vars with { override: true })
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 3964ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 127ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 154ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 86ms
+ ✓ Compiled in 935ms (684 modules)
+ ✓ Compiled in 325ms (684 modules)
+ ✓ Compiled in 424ms (684 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  enable debug logging with { debug: true })
+ GET /article-tags 200 in 152ms
+ ✓ Compiled /_not-found in 197ms (673 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 293ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  write to custom object with { processEnv: myObject })
+ GET /article-tags 200 in 58ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 21ms
+ ✓ Compiled in 694ms (687 modules)
+ ✓ Compiled in 336ms (684 modules)
+ ✓ Compiled in 343ms (684 modules)
+ ✓ Compiled in 323ms (684 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  write to custom object with { processEnv: myObject })
+ GET /article-tags 200 in 148ms
+ ✓ Compiled /_not-found in 190ms (673 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 310ms
+ ✓ Compiled in 414ms (687 modules)
+ ✓ Compiled in 316ms (687 modules)
+ ✓ Compiled in 290ms (684 modules)
+ ✓ Compiled in 387ms (684 modules)
+ ✓ Compiled in 319ms (684 modules)
+ ✓ Compiled in 294ms (684 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
+ GET /article-tags 200 in 142ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1255ms (673 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1357ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild)
+ GET /article-tags 200 in 1934ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 96ms
+ GET /article-tags 200 in 45ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 49ms
+ GET /article-tags 200 in 43ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 28ms
+ GET /article-tags 200 in 40ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 32ms
+ GET /article-tags 200 in 41ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 34ms
+ ✓ Compiled in 2.9s (684 modules)
+ ✓ Compiled in 397ms (684 modules)
+ ✓ Compiled in 308ms (684 modules)
+ ✓ Compiled in 332ms (684 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  suppress all logs with { quiet: true })
+ GET /article-tags 200 in 402ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 512ms (673 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 616ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  write to custom object with { processEnv: myObject })
+ GET /article-tags 200 in 60ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 32ms
+ ○ Compiling /api/articles-simple ...
+ ✓ Compiled /api/articles-simple in 800ms (470 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' })
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 1957ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 114ms
+ ○ Compiling /search ...
+ ✓ Compiled /search in 922ms (800 modules)
+ ✓ Compiled /api/search/semantic in 213ms (484 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`)
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "北村治夫"
+🚀 セマンティック検索開始: 北村治夫
+🔍 セマンティック検索意図分析開始: 北村治夫
+✅ 検索意図分析完了: {
+  required_tags: [ '北村治夫' ],
+  preferred_tags: [],
+  excluded_tags: [],
+  date_range: {},
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: []
+}
+📊 セマンティック検索実行開始: {
+  required_tags: [ '北村治夫' ],
+  preferred_tags: [],
+  excluded_tags: [],
+  date_range: {},
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: []
+}
+✅ セマンティック検索完了: 0件 (131ms)
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 0件 (7397ms)
+ GET /api/search/semantic?q=%E5%8C%97%E6%9D%91%E6%B2%BB%E5%A4%AB 200 in 7667ms
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "北村"
+🚀 セマンティック検索開始: 北村
+🔍 セマンティック検索意図分析開始: 北村
+✅ 検索意図分析完了: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  date_range: {},
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: [ '北村' ]
+}
+📊 セマンティック検索実行開始: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  date_range: {},
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: [ '北村' ]
+}
+✅ セマンティック検索完了: 20件 (213ms)
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 20件 (8195ms)
+ GET /api/search/semantic?q=%E5%8C%97%E6%9D%91 200 in 8208ms
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "北村治夫"
+🚀 セマンティック検索開始: 北村治夫
+🔍 セマンティック検索意図分析開始: 北村治夫
+✅ 検索意図分析完了: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  date_range: { from: '', to: '' },
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: []
+}
+📊 セマンティック検索実行開始: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  date_range: { from: '', to: '' },
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: []
+}
+✅ セマンティック検索完了: 20件 (586ms)
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 20件 (7632ms)
+ GET /api/search/semantic?q=%E5%8C%97%E6%9D%91%E6%B2%BB%E5%A4%AB 200 in 7652ms
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "弁護士"
+🚀 セマンティック検索開始: 弁護士
+🔍 セマンティック検索意図分析開始: 弁護士
+✅ 検索意図分析完了: {
+  required_tags: [ '弁護士' ],
+  preferred_tags: [ 'ビジネス', '法律' ],
+  excluded_tags: [],
+  date_range: { from: '', to: '' },
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: []
+}
+📊 セマンティック検索実行開始: {
+  required_tags: [ '弁護士' ],
+  preferred_tags: [ 'ビジネス', '法律' ],
+  excluded_tags: [],
+  date_range: { from: '', to: '' },
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: []
+}
+✅ セマンティック検索完了: 0件 (259ms)
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 0件 (5206ms)
+ GET /api/search/semantic?q=%E5%BC%81%E8%AD%B7%E5%A3%AB 200 in 5223ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 189ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 107ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 213ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 298 件
+ GET /api/articles-simple 200 in 133ms
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "政治"
+🚀 セマンティック検索開始: 政治
+🔍 セマンティック検索意図分析開始: 政治
+✅ 検索意図分析完了: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  date_range: {},
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: [ 'キーワード: 政治' ]
+}
+📊 セマンティック検索実行開始: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  date_range: {},
+  trust_level: 7,
+  importance_threshold: 6,
+  limit: 20,
+  special_conditions: [ 'キーワード: 政治' ]
+}
+✅ セマンティック検索完了: 20件 (97ms)
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 20件 (8574ms)
+ GET /api/search/semantic?q=%E6%94%BF%E6%B2%BB 200 in 8592ms
