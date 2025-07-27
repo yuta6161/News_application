@@ -67,7 +67,60 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
       .update({ ai_summary: analysis.summary })
       .eq('id', articleId)
     
-    // タグ保存は簡略化（必要に応じて実装）
+    // タグ保存機能を実装
+    if (analysis.tags && analysis.tags.length > 0) {
+      console.log(`   🏷️ ${analysis.tags.length}個のタグを保存中...`)
+      
+      for (const tag of analysis.tags) {
+        try {
+          // タグマスターに存在するか確認・作成
+          let { data: existingTag } = await supabase
+            .from('tag_master')
+            .select('id')
+            .eq('tag_name', tag.tag_name)
+            .single()
+          
+          let tagId
+          if (!existingTag) {
+            // 新しいタグを作成
+            const { data: newTag, error: tagError } = await supabase
+              .from('tag_master')
+              .insert({
+                tag_name: tag.tag_name,
+                category: tag.category || 'technology',
+                parent_category: 'auto_generated',
+                description: `自動生成されたタグ: ${tag.tag_name}`,
+                base_reliability: tag.confidence_score || 0.8
+              })
+              .select('id')
+              .single()
+            
+            if (tagError) {
+              console.error(`   ⚠️ タグ作成エラー (${tag.tag_name}):`, tagError.message)
+              continue
+            }
+            tagId = newTag.id
+          } else {
+            tagId = existingTag.id
+          }
+          
+          // 記事とタグの関連付け
+          await supabase
+            .from('article_tags')
+            .insert({
+              article_id: articleId,
+              tag_id: tagId,
+              confidence_score: tag.confidence_score || 0.8,
+              is_auto_generated: true
+            })
+          
+        } catch (tagSaveError) {
+          console.error(`   ⚠️ タグ保存エラー (${tag.tag_name}):`, tagSaveError.message)
+        }
+      }
+      console.log(`   ✅ タグ保存完了`)
+    }
+    
     console.log(`   📝 AI分析結果保存完了 (ID: ${articleId})`)
   } catch (error) {
     console.error('AI分析結果保存エラー:', error)
