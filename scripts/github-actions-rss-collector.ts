@@ -144,6 +144,22 @@ function mapToValidCategory(geminiCategory: string): string {
     return 'importance'
   }
   
+  // 健康・医療関連はジャンルとして扱う
+  if (category.includes('health') || category.includes('medical') ||
+      category.includes('disease') || category.includes('健康') ||
+      category.includes('医療') || category.includes('病気') ||
+      category.includes('健康問題')) {
+    return 'genre'
+  }
+  
+  // 国・地域・歴史関連はジャンルとして扱う
+  if (category.includes('country') || category.includes('history') ||
+      category.includes('nation') || category.includes('地域') ||
+      category.includes('国') || category.includes('歴史') ||
+      category.includes('国家')) {
+    return 'genre'
+  }
+  
   // デフォルトは技術カテゴリ
   console.log(`   ⚠️ 未知のカテゴリ "${geminiCategory}" を技術カテゴリにマッピング`)
   return 'technology'
@@ -168,7 +184,7 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
           const validReliability = Math.max(1.0, Math.min(10.0, (tag.confidence_score || 0.8) * 10))
           
           // タグマスターに存在するか確認・作成
-          let { data: existingTag } = await supabase
+          let { data: existingTag, error: checkError } = await supabase
             .from('tag_master')
             .select('id')
             .eq('tag_name', tag.tag_name)
@@ -176,6 +192,7 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
           
           let tagId
           if (!existingTag) {
+            console.log(`   🆕 新規タグ作成: "${tag.tag_name}" (${validCategory})`)
             // 新しいタグを作成
             const { data: newTag, error: tagError } = await supabase
               .from('tag_master')
@@ -195,6 +212,7 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
             }
             tagId = newTag.id
           } else {
+            console.log(`   ♻️  既存タグ使用: "${tag.tag_name}" (ID: ${existingTag.id})`)
             tagId = existingTag.id
           }
           
