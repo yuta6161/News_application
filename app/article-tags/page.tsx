@@ -46,7 +46,6 @@ export default function ArticleTagsPage() {
           .select('id, title, source_name, importance_score, ai_summary, published_at')
           .not('ai_summary', 'is', null)
           .order('published_at', { ascending: false })
-          .limit(500)
 
         console.log('📰 記事データ:', articlesData?.length, '件')
 
@@ -153,7 +152,9 @@ export default function ArticleTagsPage() {
           return b.total_usage - a.total_usage // 使用頻度順
         })
 
+        const totalRecords = summaries.reduce((sum, tag) => sum + tag.total_usage, 0)
         console.log('✅ タグサマリー処理完了:', summaries.length, '種類')
+        console.log('📊 総タグレコード数:', totalRecords, '個')
         setTagSummaries(summaries)
       } catch (err) {
         console.error('❌ タグサマリー取得エラー:', err)
@@ -184,7 +185,6 @@ export default function ArticleTagsPage() {
         .select('id, title, source_name, importance_score, ai_summary, published_at')
         .not('ai_summary', 'is', null)
         .order('published_at', { ascending: false })
-        .limit(500)
 
       console.log('📰 記事データ:', articlesData?.length, '件')
 
@@ -292,7 +292,9 @@ export default function ArticleTagsPage() {
         return b.total_usage - a.total_usage // 使用頻度順
       })
 
+      const totalRecords = summaries.reduce((sum, tag) => sum + tag.total_usage, 0)
       console.log('✅ タグサマリー処理完了:', summaries.length, '種類')
+      console.log('📊 総タグレコード数:', totalRecords, '個')
       setTagSummaries(summaries)
     } catch (err) {
       console.error('❌ タグサマリー取得エラー:', err)
@@ -421,6 +423,9 @@ export default function ArticleTagsPage() {
                 {tagSummaries.reduce((sum, tag) => sum + tag.total_usage, 0)}
               </div>
               <div className="text-sm text-gray-600">総タグ数（レコード）</div>
+              <div className="text-xs text-gray-400 mt-1">
+                計算: {tagSummaries.length}種類のタグ集計
+              </div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-2xl font-bold text-purple-600">
