@@ -73,6 +73,15 @@ function mapToValidCategory(geminiCategory: string): string {
   // カテゴリを小文字に統一して判定
   const category = (geminiCategory || '').toLowerCase()
   
+  // 8つの有効なカテゴリをそのまま受け入れる
+  const validCategories = ['company', 'person', 'technology', 'platform', 
+                          'genre', 'announcement_type', 'importance', 'event']
+  
+  if (validCategories.includes(category)) {
+    return category  // そのまま返す
+  }
+  
+  // 以下は有効でないカテゴリのマッピング
   // 技術関連
   if (category.includes('technology') || category.includes('tech') || 
       category.includes('ai') || category.includes('software') ||
