@@ -108,7 +108,6 @@ export default function ArticleTagsPage() {
         const { data: allTags, error: tagsError } = await supabase
           .from('article_tags')
           .select('tag_name, category, confidence_score, is_auto_generated')
-          .limit(5000)  // 1000件制限を5000件に拡張
         
         if (tagsError) {
           console.error('タグ取得エラー:', tagsError)
@@ -248,7 +247,6 @@ export default function ArticleTagsPage() {
       const { data: allTags, error: tagsError } = await supabase
         .from('article_tags')
         .select('tag_name, category, confidence_score, is_auto_generated')
-        .limit(5000)  // 1000件制限を5000件に拡張
       
       if (tagsError) {
         console.error('タグ取得エラー:', tagsError)
