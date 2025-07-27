@@ -69,6 +69,7 @@ export default function ArticleTagsPage() {
           .select('article_id, tag_name, category, confidence_score, is_auto_generated')
           .in('article_id', articleIds)
           .order('confidence_score', { ascending: false })
+          .limit(10000)  // 制限を明示的に増やす
 
         console.log('🏷️ 取得タグ数:', allTags?.length, '個')
 
@@ -208,6 +209,7 @@ export default function ArticleTagsPage() {
         .select('article_id, tag_name, category, confidence_score, is_auto_generated')
         .in('article_id', articleIds)
         .order('confidence_score', { ascending: false })
+        .limit(10000)  // 制限を明示的に増やす
 
       console.log('🏷️ 取得タグ数:', allTags?.length, '個')
 
@@ -220,6 +222,11 @@ export default function ArticleTagsPage() {
       const articlesWithTags: ArticleWithTags[] = articlesData.map(article => {
         const articleTags = allTags?.filter(tag => tag.article_id === article.id) || []
         console.log(`📄 "${article.title.substring(0, 30)}..." - タグ: ${articleTags.length}個`)
+        
+        // デバッグ: 最初の記事のタグ詳細を表示
+        if (articlesData.indexOf(article) === 0 && articleTags.length > 0) {
+          console.log('🔍 最初の記事のタグ詳細:', articleTags.slice(0, 3))
+        }
         
         return {
           ...article,
