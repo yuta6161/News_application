@@ -4,8 +4,91 @@
 import Parser from 'rss-parser'
 import { rssSources } from '../lib/rss-sources'
 import { calculateImportanceScore } from '../lib/importance-calculator'
-import { analyzeArticleWithGemini, saveArticleAnalysis } from '../lib/ai/article-analyzer'
-import { checkDuplicateUrls } from '../lib/mcp-supabase-helper'
+// AI分析を直接実装（GitHub Actions専用）
+async function analyzeArticleWithGemini(title: string, summary: string, url: string, source: string): Promise<any> {
+  try {
+    const { getGeminiFlash } = await import('../lib/ai/gemini')
+    const model = getGeminiFlash()
+    
+    const prompt = `この記事を分析してください：
+タイトル: ${title}
+要約: ${summary}
+ソース: ${source}
+
+以下のJSON形式で回答してください：
+{
+  "title_ja": "日本語のタイトル（英語の場合のみ）",
+  "summary": "150文字以内の要約",
+  "importance_score": 8.5,
+  "sentiment": "positive",
+  "tags": [
+    {"tag_name": "AI", "confidence_score": 0.9, "category": "technology"},
+    {"tag_name": "OpenAI", "confidence_score": 0.8, "category": "company"}
+  ],
+  "key_points": ["重要なポイント1", "重要なポイント2"]
+}`
+
+    const result = await model.generateContent(prompt)
+    const response = result.response.text()
+    
+    // JSONパース
+    const jsonMatch = response.match(/\{[\s\S]*\}/)
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0])
+    }
+    
+    // フォールバック
+    return {
+      title_ja: undefined,
+      summary: summary.substring(0, 150),
+      importance_score: 5.0,
+      sentiment: 'neutral',
+      tags: [],
+      key_points: []
+    }
+  } catch (error) {
+    console.error('Gemini分析エラー:', error)
+    return {
+      title_ja: undefined,
+      summary: summary.substring(0, 150),
+      importance_score: 5.0,
+      sentiment: 'neutral',
+      tags: [],
+      key_points: []
+    }
+  }
+}
+
+async function saveArticleAnalysis(supabase: any, articleId: number, analysis: any): Promise<void> {
+  try {
+    // ai_summary更新
+    await supabase
+      .from('news_articles')
+      .update({ ai_summary: analysis.summary })
+      .eq('id', articleId)
+    
+    // タグ保存は簡略化（必要に応じて実装）
+    console.log(`   📝 AI分析結果保存完了 (ID: ${articleId})`)
+  } catch (error) {
+    console.error('AI分析結果保存エラー:', error)
+  }
+}
+// checkDuplicateUrls を直接実装（GitHub Actions専用）
+async function checkDuplicateUrls(supabase: any, urls: string[]): Promise<Set<string>> {
+  if (urls.length === 0) return new Set()
+  
+  try {
+    const { data: existingArticles } = await supabase
+      .from('news_articles')
+      .select('source_url')
+      .in('source_url', urls)
+    
+    return new Set(existingArticles?.map((a: any) => a.source_url) || [])
+  } catch (error) {
+    console.error('重複チェックエラー:', error)
+    return new Set() // エラー時は空のSetを返す
+  }
+}
 
 // GitHub Actions専用のRSS収集関数
 async function runGitHubActionsRSSCollection(supabase: any) {
@@ -94,7 +177,7 @@ async function saveArticlesWithAI(supabase: any, articles: any[]) {
   
   // 重複チェック
   const articleUrls = articles.map(a => a.source_url).filter(url => url && url.trim() !== '')
-  const existingLinks = await checkDuplicateUrls(articleUrls)
+  const existingLinks = await checkDuplicateUrls(supabase, articleUrls)
   console.log(`📊 既存記事数: ${existingLinks.size} 件`)
   
   const newArticles = articles.filter(article => {
@@ -157,7 +240,7 @@ async function saveArticlesWithAI(supabase: any, articles: any[]) {
           article.source_name
         )
         
-        await saveArticleAnalysis(articleId, analysisResult)
+        await saveArticleAnalysis(supabase, articleId, analysisResult)
         
         if (analysisResult.title_ja && article.original_language !== 'ja') {
           await supabase
