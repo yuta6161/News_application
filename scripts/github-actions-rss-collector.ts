@@ -73,11 +73,14 @@ function mapToValidCategory(geminiCategory: string): string {
     return 'technology'
   }
   
-  // 会社・企業関連
+  // 会社・企業・クラブ関連
   if (category.includes('company') || category.includes('business') ||
       category.includes('enterprise') || category.includes('corporation') ||
       category.includes('startup') || category.includes('企業') ||
-      category.includes('会社') || category.includes('ビジネス')) {
+      category.includes('会社') || category.includes('ビジネス') ||
+      category.includes('football_club') || category.includes('soccer_club') ||
+      category.includes('club') || category.includes('team') ||
+      category.includes('チーム') || category.includes('クラブ')) {
     return 'company'
   }
   
@@ -86,15 +89,19 @@ function mapToValidCategory(geminiCategory: string): string {
       category.includes('celebrity') || category.includes('politician') ||
       category.includes('人物') || category.includes('政治家') ||
       category.includes('著名人') || category.includes('ceo') ||
-      category.includes('founder')) {
+      category.includes('founder') || category.includes('player') ||
+      category.includes('athlete') || category.includes('選手') ||
+      category.includes('football_player') || category.includes('soccer_player')) {
     return 'person'
   }
   
-  // プラットフォーム関連
+  // プラットフォーム・リーグ関連
   if (category.includes('platform') || category.includes('service') ||
       category.includes('sns') || category.includes('social') ||
       category.includes('web') || category.includes('サービス') ||
-      category.includes('プラットフォーム')) {
+      category.includes('プラットフォーム') || category.includes('league') ||
+      category.includes('football_league') || category.includes('soccer_league') ||
+      category.includes('リーグ') || category.includes('大会')) {
     return 'platform'
   }
   
@@ -133,7 +140,9 @@ function mapToValidCategory(geminiCategory: string): string {
       category.includes('weather_phenomenon') || category.includes('geography') ||
       category.includes('地域') || category.includes('災害') ||
       category.includes('天気') || category.includes('気象') ||
-      category.includes('現象')) {
+      category.includes('現象') || category.includes('position') ||
+      category.includes('football_position') || category.includes('soccer_position') ||
+      category.includes('ポジション') || category.includes('役職')) {
     return 'genre'
   }
   
