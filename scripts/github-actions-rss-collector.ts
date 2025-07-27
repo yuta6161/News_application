@@ -59,6 +59,84 @@ async function analyzeArticleWithGemini(title: string, summary: string, url: str
   }
 }
 
+// Geminiのカテゴリをデータベース制約に合うようにマッピング
+function mapToValidCategory(geminiCategory: string): string {
+  // カテゴリを小文字に統一して判定
+  const category = (geminiCategory || '').toLowerCase()
+  
+  // 技術関連
+  if (category.includes('technology') || category.includes('tech') || 
+      category.includes('ai') || category.includes('software') ||
+      category.includes('hardware') || category.includes('programming') ||
+      category.includes('データ') || category.includes('システム') ||
+      category.includes('アプリ') || category.includes('クラウド')) {
+    return 'technology'
+  }
+  
+  // 会社・企業関連
+  if (category.includes('company') || category.includes('business') ||
+      category.includes('enterprise') || category.includes('corporation') ||
+      category.includes('startup') || category.includes('企業') ||
+      category.includes('会社') || category.includes('ビジネス')) {
+    return 'company'
+  }
+  
+  // 人物関連
+  if (category.includes('person') || category.includes('people') ||
+      category.includes('celebrity') || category.includes('politician') ||
+      category.includes('人物') || category.includes('政治家') ||
+      category.includes('著名人') || category.includes('ceo') ||
+      category.includes('founder')) {
+    return 'person'
+  }
+  
+  // プラットフォーム関連
+  if (category.includes('platform') || category.includes('service') ||
+      category.includes('sns') || category.includes('social') ||
+      category.includes('web') || category.includes('サービス') ||
+      category.includes('プラットフォーム')) {
+    return 'platform'
+  }
+  
+  // イベント関連
+  if (category.includes('event') || category.includes('conference') ||
+      category.includes('summit') || category.includes('launch') ||
+      category.includes('release') || category.includes('イベント') ||
+      category.includes('発売') || category.includes('リリース') ||
+      category.includes('開催')) {
+    return 'event'
+  }
+  
+  // 発表・アナウンス関連
+  if (category.includes('announcement') || category.includes('news') ||
+      category.includes('update') || category.includes('発表') ||
+      category.includes('アナウンス') || category.includes('報告') ||
+      category.includes('更新')) {
+    return 'announcement_type'
+  }
+  
+  // 重要度関連
+  if (category.includes('importance') || category.includes('priority') ||
+      category.includes('urgent') || category.includes('重要') ||
+      category.includes('緊急')) {
+    return 'importance'
+  }
+  
+  // スポーツやエンタメなどはジャンルとして扱う
+  if (category.includes('sport') || category.includes('entertainment') ||
+      category.includes('game') || category.includes('music') ||
+      category.includes('movie') || category.includes('スポーツ') ||
+      category.includes('エンタメ') || category.includes('ゲーム') ||
+      category.includes('音楽') || category.includes('映画') ||
+      category.includes('サッカー') || category.includes('野球')) {
+    return 'genre'
+  }
+  
+  // デフォルトは技術カテゴリ
+  console.log(`   ⚠️ 未知のカテゴリ "${geminiCategory}" を技術カテゴリにマッピング`)
+  return 'technology'
+}
+
 async function saveArticleAnalysis(supabase: any, articleId: number, analysis: any): Promise<void> {
   try {
     // ai_summary更新
@@ -83,14 +161,19 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
           let tagId
           if (!existingTag) {
             // 新しいタグを作成
+            // カテゴリを有効な値にマッピング
+            const validCategory = mapToValidCategory(tag.category)
+            // reliabilityを有効な範囲に調整
+            const validReliability = Math.max(1.0, Math.min(10.0, (tag.confidence_score || 0.8) * 10))
+            
             const { data: newTag, error: tagError } = await supabase
               .from('tag_master')
               .insert({
                 tag_name: tag.tag_name,
-                category: tag.category || 'technology',
+                category: validCategory,
                 parent_category: 'auto_generated',
                 description: `自動生成されたタグ: ${tag.tag_name}`,
-                base_reliability: tag.confidence_score || 0.8
+                base_reliability: validReliability
               })
               .select('id')
               .single()
