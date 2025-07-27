@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
       .not('ai_summary', 'is', null)
       .in('source_name', displaySources) // 表示対象ソースのみ
       .order('published_at', { ascending: false })
-      .limit(500)
 
     // カテゴリフィルターを適用
     if (category && category !== 'All') {
