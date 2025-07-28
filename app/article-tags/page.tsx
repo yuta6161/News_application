@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
@@ -28,13 +28,188 @@ interface TagSummary {
 }
 
 export default function ArticleTagsPage() {
+  console.log('🎬 ArticleTagsPageコンポーネント開始')
   const [articles, setArticles] = useState<ArticleWithTags[]>([])
   const [tagSummaries, setTagSummaries] = useState<TagSummary[]>([])
   const [activeTab, setActiveTab] = useState<'articles' | 'tags'>('articles')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  // 検索・ページネーション用の新しい状態
+  const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [filteredArticles, setFilteredArticles] = useState<ArticleWithTags[]>([])
+  const articlesPerPage = 100
+
+  console.log('🚀 データロード開始（即座実行）')
+  
+  // 初期化フラグ
+  const [initialized, setInitialized] = useState(false)
+  
+  // ページごとのデータロード関数
+  const loadPageData = async (page: number) => {
+    try {
+      setIsLoading(true)
+      console.log(`🔍 ページ${page}のデータ取得開始...`)
+      
+      const offset = (page - 1) * articlesPerPage
+      
+      // ページ分の記事のみ取得
+      const { data: articlesData, error, count } = await supabase
+        .from('news_articles')
+        .select('id, title, source_name, importance_score, ai_summary, published_at', { count: 'exact' })
+        .order('published_at', { ascending: false })
+        .range(offset, offset + articlesPerPage - 1)
+
+      console.log(`📰 ページ${page}取得完了:`, articlesData?.length, '件')
+      console.log('📊 総記事数:', count, '件')
+
+      if (error) {
+        console.error('❌ エラー:', error)
+        setError(error.message)
+        return
+      }
+
+      if (articlesData && articlesData.length > 0) {
+        // このページの記事IDのタグのみ取得
+        const articleIds = articlesData.map(article => article.id)
+        
+        console.log(`🏷️ ページ${page}のタグデータ取得開始...`, articleIds.length, '記事')
+        
+        const { data: tagData, error: tagError } = await supabase
+          .from('article_tags')
+          .select('article_id, tag_name, category, confidence_score, is_auto_generated')
+          .in('article_id', articleIds)
+          .order('confidence_score', { ascending: false })
+        
+        console.log(`🏷️ ページ${page}タグデータ取得完了:`, tagData?.length, '件')
+        
+        if (tagError) {
+          console.error('❌ タグエラー:', tagError)
+        }
+        
+        // 記事にタグを関連付け
+        const processedArticles = articlesData.map(article => {
+          const articleTags = tagData?.filter(tag => tag.article_id === article.id) || []
+          return {
+            ...article,
+            tags: articleTags.map(tag => ({
+              tag_name: tag.tag_name,
+              category: tag.category,
+              confidence_score: tag.confidence_score,
+              is_auto_generated: tag.is_auto_generated
+            }))
+          }
+        })
+
+        console.log(`✅ ページ${page}データ設定完了:`, processedArticles.length, '件（タグ付き）')
+        
+        // 状態更新
+        setArticles(processedArticles)
+        setFilteredArticles(processedArticles)
+        
+        // 総ページ数を計算
+        const totalPages = Math.ceil((count || 0) / articlesPerPage)
+        console.log('📄 総ページ数:', totalPages)
+        
+      } else {
+        setArticles([])
+        setFilteredArticles([])
+      }
+    } catch (err) {
+      console.error('❌ 例外エラー:', err)
+      setError(err instanceof Error ? err.message : '不明なエラー')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // コンポーネントマウント時に最初のページを読み込み
+  if (!initialized) {
+    console.log('🔥 初期化実行開始！')
+    setInitialized(true)
+    loadPageData(1)
+  }
+
+  // ページ変更時の処理
+  const handlePageChange = (newPage: number) => {
+    console.log(`🔄 ページ変更: ${currentPage} → ${newPage}`)
+    setCurrentPage(newPage)
+    loadPageData(newPage)
+  }
+
+  // タグサマリー用に軽量にタグ統計のみ取得
+  const loadTagSummariesOnly = async () => {
+    try {
+      console.log('🏷️ タグサマリー取得開始...')
+      
+      // 全タグを直接取得（軽量）
+      const { data: allTags, error } = await supabase
+        .from('article_tags')
+        .select('tag_name, category, confidence_score, is_auto_generated')
+      
+      if (error) {
+        console.error('❌ タグ取得エラー:', error)
+        return
+      }
+      
+      if (!allTags || allTags.length === 0) {
+        console.log('⚠️ タグなし')
+        setTagSummaries([])
+        return
+      }
+
+      console.log('📊 タグサマリー計算開始:', allTags.length, '件のタグから集計')
+      const tagSummaryMap: { [tagName: string]: any } = {}
+      
+      allTags.forEach(tag => {
+        if (!tagSummaryMap[tag.tag_name]) {
+          tagSummaryMap[tag.tag_name] = {
+            tag_name: tag.tag_name,
+            category: tag.category,
+            total_usage: 0,
+            avg_confidence: 0,
+            is_auto_generated: tag.is_auto_generated,
+            confidences: []
+          }
+        } else {
+          // 既存エントリがある場合、事前定義タグを優先
+          if (!tag.is_auto_generated) {
+            tagSummaryMap[tag.tag_name].is_auto_generated = false
+          }
+        }
+        tagSummaryMap[tag.tag_name].total_usage++
+        tagSummaryMap[tag.tag_name].confidences.push(tag.confidence_score)
+      })
+
+      // 平均信頼度を計算
+      const tagSummaries = Object.values(tagSummaryMap).map((tag: any) => ({
+        ...tag,
+        avg_confidence: tag.confidences.reduce((sum: number, conf: number) => sum + conf, 0) / tag.confidences.length
+      }))
+
+      // 事前定義タグ優先、その後使用頻度順でソート
+      tagSummaries.sort((a, b) => {
+        if (a.is_auto_generated !== b.is_auto_generated) {
+          return a.is_auto_generated ? 1 : -1 // 事前定義を上位に
+        }
+        return b.total_usage - a.total_usage // 使用頻度順
+      })
+
+      console.log('✅ タグサマリー処理完了:', tagSummaries.length, '種類')
+      setTagSummaries(tagSummaries)
+    } catch (err) {
+      console.error('❌ タグサマリー取得エラー:', err)
+    }
+  }
+
+  // 初回のみタグサマリーを読み込み
+  if (initialized && tagSummaries.length === 0) {
+    loadTagSummariesOnly()
+  }
 
   const fetchData = useCallback(async () => {
+    console.log('🔥 fetchData関数実行開始')
     const fetchArticlesWithTagsInternal = async () => {
       try {
         setIsLoading(true)
@@ -73,7 +248,7 @@ export default function ArticleTagsPage() {
         console.log(`📦 ${batches.length}個のバッチに分割`)
         
         // 各バッチでタグを取得
-        let allTags = []
+        let allTags: any[] = []
         for (let i = 0; i < batches.length; i++) {
           const batch = batches[i]
           const { data: batchTags, error: batchError } = await supabase
@@ -112,6 +287,8 @@ export default function ArticleTagsPage() {
 
         console.log('✅ 処理完了:', articlesWithTags.length, '件')
         setArticles(articlesWithTags)
+        // 初期フィルタリング状態を設定
+        setFilteredArticles(articlesWithTags)
       } catch (err) {
         console.error('❌ データ取得エラー:', err)
         setError(err instanceof Error ? err.message : '不明なエラー')
@@ -123,7 +300,7 @@ export default function ArticleTagsPage() {
         console.log('🏷️ タグサマリー取得開始...')
         
         // バッチ処理でタグを取得（制限回避）
-        let allTags = []
+        let allTags: any[] = []
         const limit = 1000
         let offset = 0
         let hasMore = true
@@ -204,10 +381,137 @@ export default function ArticleTagsPage() {
       fetchTagSummariesInternal()
     ])
   }, [])
-
+  
+  // 検索モード管理
+  const [isSearchMode, setIsSearchMode] = useState(false)
+  const [allArticlesForSearch, setAllArticlesForSearch] = useState<ArticleWithTags[]>([])
+  
+  // 検索用に全記事をロード
+  const loadAllArticlesForSearch = async () => {
+    if (allArticlesForSearch.length > 0) return // 既にロード済み
+    
+    try {
+      setIsLoading(true)
+      console.log('🔍 検索用全記事ロード開始...')
+      
+      // 全記事を取得（バッチ処理）
+      let allArticles: any[] = []
+      let hasMore = true
+      let offset = 0
+      const limit = 1000
+      
+      while (hasMore) {
+        const { data: batch, error: batchError } = await supabase
+          .from('news_articles')
+          .select('id, title, source_name, importance_score, ai_summary, published_at')
+          .order('published_at', { ascending: false })
+          .range(offset, offset + limit - 1)
+        
+        if (batchError) {
+          console.error('❌ 記事取得エラー:', batchError)
+          break
+        }
+        
+        if (batch && batch.length > 0) {
+          allArticles = [...allArticles, ...batch]
+          offset += limit
+          hasMore = batch.length === limit
+          console.log(`📰 検索用記事バッチ取得: ${batch.length}件 (累計: ${allArticles.length}件)`)
+        } else {
+          hasMore = false
+        }
+      }
+      
+      // 全記事のタグを取得
+      const articleIds = allArticles.map(a => a.id)
+      let allTags: any[] = []
+      const batchSize = 100
+      const batches = []
+      for (let i = 0; i < articleIds.length; i += batchSize) {
+        batches.push(articleIds.slice(i, i + batchSize))
+      }
+      
+      for (let i = 0; i < batches.length; i++) {
+        const batch = batches[i]
+        const { data: batchTags } = await supabase
+          .from('article_tags')
+          .select('article_id, tag_name, category, confidence_score, is_auto_generated')
+          .in('article_id', batch)
+        
+        if (batchTags) {
+          allTags = [...allTags, ...batchTags]
+        }
+      }
+      
+      // 記事にタグを関連付け
+      const processedArticles = allArticles.map(article => {
+        const articleTags = allTags?.filter(tag => tag.article_id === article.id) || []
+        return {
+          ...article,
+          tags: articleTags.map(tag => ({
+            tag_name: tag.tag_name,
+            category: tag.category,
+            confidence_score: tag.confidence_score,
+            is_auto_generated: tag.is_auto_generated
+          }))
+        }
+      })
+      
+      setAllArticlesForSearch(processedArticles)
+      console.log('✅ 検索用全記事ロード完了:', processedArticles.length, '件')
+    } catch (err) {
+      console.error('❌ 検索用記事ロードエラー:', err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
+  // 検索フィルタリング処理
   useEffect(() => {
-    fetchData()
-  }, [])
+    if (!searchQuery) {
+      // 検索なし：ページネーションモード
+      setIsSearchMode(false)
+      setFilteredArticles([])
+    } else {
+      // 検索あり：検索モード
+      setIsSearchMode(true)
+      if (allArticlesForSearch.length === 0) {
+        loadAllArticlesForSearch() // 初回のみ全記事ロード
+      } else {
+        // 検索実行
+        const query = searchQuery.toLowerCase()
+        const filtered = allArticlesForSearch.filter(article => {
+          const titleMatch = article.title.toLowerCase().includes(query)
+          const sourceMatch = article.source_name.toLowerCase().includes(query)
+          const summaryMatch = article.ai_summary?.toLowerCase().includes(query) || false
+          const tagMatch = article.tags.some(tag => 
+            tag.tag_name.toLowerCase().includes(query) ||
+            tag.category.toLowerCase().includes(query)
+          )
+          return titleMatch || sourceMatch || summaryMatch || tagMatch
+        })
+        setFilteredArticles(filtered)
+        setCurrentPage(1) // 検索時はページをリセット
+      }
+    }
+  }, [searchQuery, allArticlesForSearch])
+  
+  // 総記事数とページ数（記事タブ表示用）
+  const [totalArticleCount, setTotalArticleCount] = useState(0)
+  const totalPages = Math.ceil(totalArticleCount / articlesPerPage)
+  
+  // 初回に総記事数を取得
+  if (initialized && totalArticleCount === 0) {
+    supabase
+      .from('news_articles')
+      .select('id', { count: 'exact' })
+      .then(({ count }) => {
+        if (count) {
+          setTotalArticleCount(count)
+          console.log('📊 総記事数設定:', count)
+        }
+      })
+  }
 
   const fetchArticlesWithTags = async () => {
     try {
@@ -247,7 +551,7 @@ export default function ArticleTagsPage() {
       console.log(`📦 ${batches.length}個のバッチに分割`)
       
       // 各バッチでタグを取得
-      let allTags = []
+      let allTags: any[] = []
       for (let i = 0; i < batches.length; i++) {
         const batch = batches[i]
         const { data: batchTags, error: batchError } = await supabase
@@ -291,6 +595,8 @@ export default function ArticleTagsPage() {
 
       console.log('✅ 処理完了:', articlesWithTags.length, '件')
       setArticles(articlesWithTags)
+      // 初期フィルタリング状態を設定
+      setFilteredArticles(articlesWithTags)
     } catch (err) {
       console.error('❌ データ取得エラー:', err)
       setError(err instanceof Error ? err.message : '不明なエラー')
@@ -302,7 +608,7 @@ export default function ArticleTagsPage() {
       console.log('🏷️ タグサマリー取得開始...')
       
       // バッチ処理でタグを取得（制限回避）
-      let allTags = []
+      let allTags: any[] = []
       const limit = 1000
       let offset = 0
       let hasMore = true
@@ -438,16 +744,16 @@ export default function ArticleTagsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 text-gray-900">
       <div className="max-w-6xl mx-auto px-4">
         {/* ヘッダー */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                📰 記事タグビューアー
+              <h1 className="text-3xl font-bold text-black mb-2">
+                📰 記事タグビューアー <span className="text-lg text-gray-600">(ページ{currentPage})</span>
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-800">
                 AI分析済み記事のタグを詳細表示・タグ管理
               </p>
             </div>
@@ -459,6 +765,42 @@ export default function ArticleTagsPage() {
             </Link>
           </div>
 
+          {/* 検索ボックス（記事タブの時のみ表示） */}
+          {activeTab === 'articles' && (
+            <div className="mt-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="記事タイトル、タグ、ソース名で検索..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  🔍
+                </div>
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+              {searchQuery && isSearchMode && (
+                <p className="mt-2 text-sm text-gray-600">
+                  「{searchQuery}」の検索結果: {filteredArticles.length}件
+                </p>
+              )}
+              {!searchQuery && (
+                <p className="mt-2 text-sm text-gray-500">
+                  💡 検索なし：高速ページネーション / 検索あり：全記事から検索
+                </p>
+              )}
+            </div>
+          )}
+          
           {/* タブナビゲーション */}
           <div className="mt-6">
             <div className="border-b border-gray-200">
@@ -471,7 +813,7 @@ export default function ArticleTagsPage() {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  📰 記事別タグ表示 ({articles.length}件)
+                  📰 記事別タグ表示 ({totalArticleCount}件)
                 </button>
                 <button
                   onClick={() => setActiveTab('tags')}
@@ -490,14 +832,14 @@ export default function ArticleTagsPage() {
           {/* 統計情報 */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-2xl font-bold text-blue-600">{articles.length}</div>
-              <div className="text-sm text-gray-600">AI分析済み記事</div>
+              <div className="text-2xl font-bold text-blue-600">{totalArticleCount}</div>
+              <div className="text-sm text-gray-800">全記事数</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-2xl font-bold text-green-600">
                 {tagSummaries.reduce((sum, tag) => sum + tag.total_usage, 0)}
               </div>
-              <div className="text-sm text-gray-600">総タグ数（レコード）</div>
+              <div className="text-sm text-gray-800">総タグ数（レコード）</div>
               <div className="text-xs text-gray-400 mt-1">
                 計算: {tagSummaries.length}種類のタグ集計
               </div>
@@ -506,13 +848,13 @@ export default function ArticleTagsPage() {
               <div className="text-2xl font-bold text-purple-600">
                 {tagSummaries.filter(tag => !tag.is_auto_generated).length}
               </div>
-              <div className="text-sm text-gray-600">📌 事前定義タグ種類</div>
+              <div className="text-sm text-gray-800">📌 事前定義タグ種類</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-2xl font-bold text-orange-600">
                 {tagSummaries.filter(tag => tag.is_auto_generated).length}
               </div>
-              <div className="text-sm text-gray-600">🔄 自動生成タグ種類</div>
+              <div className="text-sm text-gray-800">🔄 自動生成タグ種類</div>
             </div>
           </div>
         </div>
@@ -532,20 +874,50 @@ export default function ArticleTagsPage() {
                 </p>
               </div>
             ) : (
-          <div className="space-y-6">
-            {articles.map((article, index) => (
-              <div key={article.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div>
+                {/* ページネーション上部（検索モードでは非表示） */}
+                {!isSearchMode && totalPages > 1 && (
+                  <div className="mb-6 flex items-center justify-between">
+                    <div className="text-sm text-gray-600">
+                      全{totalArticleCount}件中 {(currentPage - 1) * articlesPerPage + 1}-{Math.min(currentPage * articlesPerPage, totalArticleCount)}件を表示
+                    </div>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        ← 前へ
+                      </button>
+                      <span className="px-3 py-1">
+                        {currentPage} / {totalPages}
+                      </span>
+                      <button
+                        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        次へ →
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="space-y-6">
+                  {/* 検索モード時は filteredArticles、ページネーションモード時は articles を表示 */}
+                  {(isSearchMode ? filteredArticles : articles).map((article, index) => (
+                    <div key={article.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                 {/* 記事ヘッダー */}
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center text-sm text-gray-500 mb-2">
-                        <span className="mr-2">#{index + 1}</span>
+                        <span className="mr-2">#{isSearchMode ? index + 1 : (currentPage - 1) * articlesPerPage + index + 1}</span>
                         <span className="mr-4">📺 {article.source_name}</span>
                         <span className="mr-4">⭐ 重要度: {article.importance_score}</span>
                         <span>📅 {new Date(article.published_at).toLocaleDateString('ja-JP')}</span>
                       </div>
-                      <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                      <h2 className="text-xl font-semibold text-black mb-2">
                         {article.title}
                       </h2>
                       {article.ai_summary && (
@@ -604,9 +976,35 @@ export default function ArticleTagsPage() {
                     </>
                   )}
                 </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* ページネーション下部（検索モードでは非表示） */}
+                {!isSearchMode && totalPages > 1 && (
+                  <div className="mt-6 flex items-center justify-center">
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        ← 前へ
+                      </button>
+                      <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded">
+                        {currentPage} / {totalPages}
+                      </span>
+                      <button
+                        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        次へ →
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
             )}
           </>
         )}
