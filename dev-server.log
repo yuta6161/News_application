@@ -385,3 +385,442 @@
 🎉 セマンティック検索全体完了
 ✅ セマンティック検索API完了: 20件 (8574ms)
  GET /api/search/semantic?q=%E6%94%BF%E6%B2%BB 200 in 8592ms
+ ✓ Compiled in 3.1s (364 modules)
+ ✓ Compiled in 811ms (699 modules)
+ ✓ Compiled in 400ms (699 modules)
+ ✓ Compiled in 172ms (335 modules)
+ ✓ Compiled in 139ms (335 modules)
+ ✓ Compiled /api/search/semantic in 360ms (481 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] })
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "政治"
+🚀 セマンティック検索開始: 政治
+🔍 セマンティック検索意図分析開始: 政治
+📊 品質ベースタグ取得開始...
+✨ 高品質タグ: 29個
+💎 中品質タグ: 6個
+✅ 検索意図分析完了: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 必須タグ: 0個
+💡 推奨タグ: 0個
+❌ 除外タグ: 0個
+📊 セマンティック検索実行開始: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🔍 Stage 3: 重要度ベース検索
+✅ セマンティック検索完了: 10件 (130ms)
+🔍 検索タイプ: 重要度ベース
+📊 品質統計: 高品質0個, 中品質0個
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 10件 (7477ms)
+ GET /api/search/semantic?q=%E6%94%BF%E6%B2%BB 200 in 8178ms
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "惑星"
+🚀 セマンティック検索開始: 惑星
+🔍 セマンティック検索意図分析開始: 惑星
+📊 品質ベースタグ取得開始...
+✨ 高品質タグ: 29個
+💎 中品質タグ: 6個
+✅ 検索意図分析完了: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 必須タグ: 0個
+💡 推奨タグ: 0個
+❌ 除外タグ: 0個
+📊 セマンティック検索実行開始: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🔍 Stage 3: 重要度ベース検索
+✅ セマンティック検索完了: 10件 (90ms)
+🔍 検索タイプ: 重要度ベース
+📊 品質統計: 高品質0個, 中品質0個
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 10件 (4067ms)
+ GET /api/search/semantic?q=%E6%83%91%E6%98%9F 200 in 4088ms
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "惑星誕生"
+🚀 セマンティック検索開始: 惑星誕生
+🔍 セマンティック検索意図分析開始: 惑星誕生
+📊 品質ベースタグ取得開始...
+✨ 高品質タグ: 29個
+💎 中品質タグ: 6個
+✅ 検索意図分析完了: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 必須タグ: 0個
+💡 推奨タグ: 0個
+❌ 除外タグ: 0個
+📊 セマンティック検索実行開始: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🔍 Stage 3: 重要度ベース検索
+✅ セマンティック検索完了: 10件 (61ms)
+🔍 検索タイプ: 重要度ベース
+📊 品質統計: 高品質0個, 中品質0個
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 10件 (3970ms)
+ GET /api/search/semantic?q=%E6%83%91%E6%98%9F%E8%AA%95%E7%94%9F 200 in 3985ms
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "惑星誕生"
+🚀 セマンティック検索開始: 惑星誕生
+🔍 セマンティック検索意図分析開始: 惑星誕生
+📊 品質ベースタグ取得開始...
+✨ 高品質タグ: 29個
+💎 中品質タグ: 6個
+✅ 検索意図分析完了: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 必須タグ: 0個
+💡 推奨タグ: 0個
+❌ 除外タグ: 0個
+📊 セマンティック検索実行開始: {
+  required_tags: [],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🔍 Stage 3: 重要度ベース検索
+✅ セマンティック検索完了: 10件 (52ms)
+🔍 検索タイプ: 重要度ベース
+📊 品質統計: 高品質0個, 中品質0個
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 10件 (4509ms)
+ GET /api/search/semantic?q=%E6%83%91%E6%98%9F%E8%AA%95%E7%94%9F 200 in 4533ms
+ ○ Compiling /api/articles-simple ...
+ ✓ Compiled /api/articles-simple in 2.7s (479 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  suppress all logs with { quiet: true })
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 301 件
+ GET /api/articles-simple 200 in 3786ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 301 件
+ GET /api/articles-simple 200 in 99ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 301 件
+ GET /api/articles-simple 200 in 1410ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 301 件
+ GET /api/articles-simple 200 in 163ms
+ GET / 200 in 1810ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 344 件
+ GET /api/articles-simple 200 in 1057ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 344 件
+ GET /api/articles-simple 200 in 133ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild)
+ GET /article-tags 200 in 545ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 344 件
+ GET /api/articles-simple 200 in 156ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 344 件
+ GET /api/articles-simple 200 in 138ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 344 件
+ GET /api/articles-simple 200 in 164ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 344 件
+ GET /api/articles-simple 200 in 96ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 344 件
+ GET /api/articles-simple 200 in 133ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 344 件
+ GET /api/articles-simple 200 in 95ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 363 件
+ GET /api/articles-simple 200 in 698ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 363 件
+ GET /api/articles-simple 200 in 241ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 363 件
+ GET /api/articles-simple 200 in 199ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 363 件
+ GET /api/articles-simple 200 in 153ms
+ ○ Compiling /api/search/semantic ...
+ ✓ Compiled /api/search/semantic in 750ms (484 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit)
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "アメリカ、陰謀"
+🚀 セマンティック検索開始: アメリカ、陰謀
+🔍 セマンティック検索意図分析開始: アメリカ、陰謀
+📊 品質ベースタグ取得開始...
+✨ 高品質タグ: 29個
+💎 中品質タグ: 10個
+✅ 検索意図分析完了: {
+  required_tags: [ '陰謀論' ],
+  preferred_tags: [ 'Apple', 'Forbes', 'Google', 'OpenAI' ],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 必須タグ: 1個
+💡 推奨タグ: 4個
+❌ 除外タグ: 0個
+📊 セマンティック検索実行開始: {
+  required_tags: [ '陰謀論' ],
+  preferred_tags: [ 'Apple', 'Forbes', 'Google', 'OpenAI' ],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 Stage 1: 必須タグ検索
+✅ セマンティック検索完了: 4件 (297ms)
+🔍 検索タイプ: 必須タグマッチ
+📊 品質統計: 高品質1個, 中品質4個
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 4件 (10053ms)
+ GET /api/search/semantic?q=%E3%82%A2%E3%83%A1%E3%83%AA%E3%82%AB%E3%80%81%E9%99%B0%E8%AC%80 200 in 10985ms
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "ゲーム、最新"
+🚀 セマンティック検索開始: ゲーム、最新
+🔍 セマンティック検索意図分析開始: ゲーム、最新
+📊 品質ベースタグ取得開始...
+✨ 高品質タグ: 29個
+💎 中品質タグ: 10個
+✅ 検索意図分析完了: {
+  required_tags: [ '新製品発表', '市場動向' ],
+  preferred_tags: [ 'ソフトウェア開発', '注目' ],
+  excluded_tags: [
+    'AI',           'AIエージェント', 'AI倫理',
+    'Amazon',       'Football',       'Google',
+    'MLB',          'Meta',           'NBA',
+    'NFL',          'OpenAI',         'Sports News',
+    'Web開発',      'Windows',        'macOS',
+    'サッカー',     'シンセサイザー', 'セキュリティ',
+    'ハードウェア', 'ボクシング',     '無料',
+    '生成AI',       '言語AI',         '野球',
+    '陰謀論',       '音楽',           '音楽制作',
+    'Apple',        'Forbes',         'Y Combinator',
+    '機械学習'
+  ],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 必須タグ: 2個
+💡 推奨タグ: 2個
+❌ 除外タグ: 31個
+📊 セマンティック検索実行開始: {
+  required_tags: [ '新製品発表', '市場動向' ],
+  preferred_tags: [ 'ソフトウェア開発', '注目' ],
+  excluded_tags: [
+    'AI',           'AIエージェント', 'AI倫理',
+    'Amazon',       'Football',       'Google',
+    'MLB',          'Meta',           'NBA',
+    'NFL',          'OpenAI',         'Sports News',
+    'Web開発',      'Windows',        'macOS',
+    'サッカー',     'シンセサイザー', 'セキュリティ',
+    'ハードウェア', 'ボクシング',     '無料',
+    '生成AI',       '言語AI',         '野球',
+    '陰謀論',       '音楽',           '音楽制作',
+    'Apple',        'Forbes',         'Y Combinator',
+    '機械学習'
+  ],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 Stage 1: 必須タグ検索
+💡 Stage 2: 推奨タグ検索
+検索エラー: {
+  code: 'PGRST100',
+  details: 'unexpected "t" expecting "not" or operator (eq, gt, ...)',
+  hint: null,
+  message: '"failed to parse logic tree ((article_tags.tag_name.ilike.%ソフトウェア開発%,article_tags.tag_name.ilike.%注目%))" (line 1, column 17)'
+}
+🔍 Stage 3: 重要度ベース検索
+🚫 除外タグフィルタ: 10件 → 5件
+✅ セマンティック検索完了: 5件 (251ms)
+🔍 検索タイプ: 重要度ベース
+📊 品質統計: 高品質2個, 中品質2個
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 5件 (10968ms)
+ GET /api/search/semantic?q=%E3%82%B2%E3%83%BC%E3%83%A0%E3%80%81%E6%9C%80%E6%96%B0 200 in 10984ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1086ms (688 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1533ms
+ GET / 200 in 637ms
+ ○ Compiling /api/articles-simple ...
+ ✓ Compiled /api/articles-simple in 1805ms (479 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 encrypt with dotenvx: https://dotenvx.com)
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 409 件
+ GET /api/articles-simple 200 in 4360ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 409 件
+ GET /api/articles-simple 200 in 262ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 409 件
+ GET /api/articles-simple 200 in 344ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 409 件
+ GET /api/articles-simple 200 in 169ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 409 件
+ GET /api/articles-simple 200 in 807ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 409 件
+ GET /api/articles-simple 200 in 211ms
+ ○ Compiling /api/search/semantic ...
+ ✓ Compiled /api/search/semantic in 533ms (484 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  enable debug logging with { debug: true })
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "作曲、米津"
+🚀 セマンティック検索開始: 作曲、米津
+🔍 セマンティック検索意図分析開始: 作曲、米津
+📊 品質ベースタグ取得開始...
+✨ 高品質タグ: 82個
+💎 中品質タグ: 3個
+✅ 検索意図分析完了: {
+  required_tags: [ '音楽制作', '音楽', 'DAW', 'DTM', 'シンセサイザー', 'ミキシング' ],
+  preferred_tags: [ 'Plugin Boutique' ],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 必須タグ: 6個
+💡 推奨タグ: 1個
+❌ 除外タグ: 0個
+📊 セマンティック検索実行開始: {
+  required_tags: [ '音楽制作', '音楽', 'DAW', 'DTM', 'シンセサイザー', 'ミキシング' ],
+  preferred_tags: [ 'Plugin Boutique' ],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 Stage 1: 必須タグ検索
+💡 Stage 2: 推奨タグ検索
+✅ セマンティック検索完了: 2件 (964ms)
+🔍 検索タイプ: 推奨タグマッチ
+📊 品質統計: 高品質6個, 中品質1個
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 2件 (11826ms)
+ GET /api/search/semantic?q=%E4%BD%9C%E6%9B%B2%E3%80%81%E7%B1%B3%E6%B4%A5 200 in 12448ms
+ ✓ Compiled in 346ms (364 modules)
+ ✓ Compiled /api/search/semantic in 219ms (481 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild)
+🔍 セマンティック検索API呼び出し開始
+📝 検索クエリ: "作曲、米津"
+🚀 セマンティック検索開始: 作曲、米津
+🔍 セマンティック検索意図分析開始: 作曲、米津
+📊 品質ベースタグ取得開始...
+✨ 高品質タグ: 82個
+💎 中品質タグ: 3個
+✅ 検索意図分析完了: {
+  required_tags: [ 'DAW', 'DTM', '音楽', '音楽制作' ],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 必須タグ: 4個
+💡 推奨タグ: 0個
+❌ 除外タグ: 0個
+📊 セマンティック検索実行開始: {
+  required_tags: [ 'DAW', 'DTM', '音楽', '音楽制作' ],
+  preferred_tags: [],
+  excluded_tags: [],
+  importance_threshold: 6,
+  limit: 20
+}
+🎯 Stage 1: 必須タグ検索
+✅ セマンティック検索完了: 20件 (201ms)
+🔍 検索タイプ: 必須タグマッチ
+📊 品質統計: 高品質4個, 中品質0個
+🎉 セマンティック検索全体完了
+✅ セマンティック検索API完了: 20件 (5598ms)
+ GET /api/search/semantic?q=%E4%BD%9C%E6%9B%B2%E3%80%81%E7%B1%B3%E6%B4%A5 200 in 5940ms
+ ✓ Compiled /_not-found in 383ms (805 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 480ms
+ GET / 200 in 57ms
+ GET / 200 in 34ms
+ ✓ Compiled /api/articles-simple in 201ms (479 modules)
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' })
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 409 件
+ GET /api/articles-simple 200 in 552ms
+🔍 シンプル記事API呼び出し開始
+📂 指定カテゴリ: All
+👁️ 表示対象ソース数: 22
+✅ 記事取得成功: 409 件
+ GET /api/articles-simple 200 in 134ms
+[dotenv@17.2.0] injecting env (0) from .env.local (tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild)
+ GET /article-tags 200 in 132ms

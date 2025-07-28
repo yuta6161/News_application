@@ -50,7 +50,9 @@ export async function GET(request: NextRequest) {
         search_intent: searchResult.search_intent,
         execution_time: searchResult.execution_time,
         api_time: totalTime,
-        relevance_scores: searchResult.relevance_scores
+        relevance_scores: searchResult.relevance_scores,
+        search_type: searchResult.search_type,
+        quality_stats: searchResult.quality_stats
       },
       timestamp: new Date().toISOString()
     })
@@ -120,7 +122,9 @@ export async function POST(request: NextRequest) {
         search_intent: searchResult.search_intent,
         execution_time: searchResult.execution_time,
         api_time: totalTime,
-        relevance_scores: searchResult.relevance_scores
+        relevance_scores: searchResult.relevance_scores,
+        search_type: searchResult.search_type,
+        quality_stats: searchResult.quality_stats
       },
       timestamp: new Date().toISOString()
     })

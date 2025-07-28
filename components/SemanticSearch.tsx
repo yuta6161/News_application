@@ -25,6 +25,12 @@ interface SearchMetadata {
     importance_threshold?: number
   }
   relevance_scores: { [articleId: string]: number }
+  search_type?: string  // 検索タイプ
+  quality_stats?: {     // 品質統計
+    high_quality_tags_used: number
+    medium_quality_tags_used: number
+    fallback_search: boolean
+  }
 }
 
 interface SearchResponse {
@@ -205,18 +211,40 @@ export default function SemanticSearch() {
       {metadata && !isLoading && (
         <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold text-purple-900">検索結果概要</h3>
+            <div className="flex items-center">
+              <h3 className="font-semibold text-purple-900 mr-3">検索結果概要</h3>
+              {metadata.search_type && (
+                <span className={`px-2 py-1 rounded text-xs font-medium ${
+                  metadata.search_type === '必須タグマッチ' 
+                    ? 'bg-green-100 text-green-800'
+                    : metadata.search_type === '推奨タグマッチ'
+                    ? 'bg-blue-100 text-blue-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {metadata.search_type}
+                </span>
+              )}
+            </div>
             <div className="flex items-center text-sm text-purple-700">
               <ClockIcon className="w-4 h-4 mr-1" />
               {metadata.execution_time}ms
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
             <div>
               <span className="font-medium text-purple-800">件数:</span>
               <span className="ml-2 text-purple-700">{metadata.total_count}件</span>
             </div>
+            
+            {metadata.quality_stats && (
+              <div>
+                <span className="font-medium text-purple-800">品質タグ:</span>
+                <span className="ml-2 text-purple-700">
+                  高{metadata.quality_stats.high_quality_tags_used}個・中{metadata.quality_stats.medium_quality_tags_used}個
+                </span>
+              </div>
+            )}
             
             {metadata.search_intent.required_tags.length > 0 && (
               <div>
@@ -236,6 +264,14 @@ export default function SemanticSearch() {
               </div>
             )}
           </div>
+          
+          {metadata.quality_stats?.fallback_search && (
+            <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
+              <span className="text-yellow-800">
+                ⚠️ フォールバック検索：既存タグでの検索が0件のため、重要度ベースで検索しました
+              </span>
+            </div>
+          )}
         </div>
       )}
 
