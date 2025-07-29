@@ -1,13 +1,13 @@
-name: RSS Auto Collection with Gemini AI
+name: Game RSS Auto Collection with Gemini AI
 
 on:
-  # schedule:
-  #   # 30分ごとに実行（UTCタイム）- ゲーム系RSS収集に切り替えのため一時停止
-  #   - cron: '*/30 * * * *'
+  schedule:
+    # 30分ごとに実行（UTCタイム）- ゲーム記事専用
+    - cron: '*/30 * * * *'
   workflow_dispatch: # 手動実行も可能
 
 jobs:
-  collect-rss:
+  collect-game-rss:
     runs-on: ubuntu-latest
     
     steps:
@@ -23,8 +23,8 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
-    - name: Run RSS Collection with Gemini AI
-      run: timeout 480 npx tsx scripts/github-actions-rss-collector.ts
+    - name: Run Game RSS Collection with Gemini AI
+      run: timeout 480 npx tsx scripts/game-rss-collector.ts
       timeout-minutes: 9
       env:
         NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -34,7 +34,8 @@ jobs:
     - name: Report collection results
       if: always()
       run: |
-        echo "RSS収集ジョブが完了しました"
+        echo "🎮 ゲーム系RSS収集ジョブが完了しました"
         echo "実行時刻: $(date)"
         echo "リポジトリ: ${{ github.repository }}"
         echo "ブランチ: ${{ github.ref }}"
+        echo "ワークフロー: ゲーム系RSS専用"
