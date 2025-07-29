@@ -1,4 +1,5 @@
 import { RSSSource } from './rss-sources';
+import { calculateGameImportanceScore } from './game-rss-sources';
 
 /**
  * 記事の重要度を計算する関数
@@ -9,6 +10,11 @@ export function calculateImportanceScore(
   summary: string,
   source: RSSSource
 ): number {
+  // ゲーム系記事は専用の計算関数を使用
+  if (source.category === 'Game') {
+    return calculateGameImportanceScore(title, summary, source);
+  }
+  
   // 基準値: 5.0
   let score = 5.0;
   
@@ -21,6 +27,7 @@ export function calculateImportanceScore(
   const categoryBonus = {
     'AI': 2.0,              // AI関連は最優先
     'Tech': 1.0,            // Tech関連は高優先
+    'Game': 0.8,            // ゲーム関連（専用計算関数があるが一般計算時用）
     'Startup': 0.5,         // スタートアップは中優先
     'Business': 0.3,        // ビジネスは普通
     'Music': 0.2,           // 音楽関連

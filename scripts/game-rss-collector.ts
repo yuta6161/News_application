@@ -2,80 +2,9 @@
 import Parser from 'rss-parser'
 import { createClient } from '@supabase/supabase-js'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { gameRssSources, calculateGameImportanceScore } from '../lib/game-rss-sources'
 
-// ゲーム系RSSソース定義
-const gameRssSources = [
-  {
-    name: '4Gamer.net',
-    url: 'https://www.4gamer.net/rss/news.xml',
-    category: 'game',
-    language: 'ja',
-    priority: 10
-  },
-  {
-    name: 'ファミ通.com',
-    url: 'https://www.famitsu.com/rss/famitsu_all.rdf',
-    category: 'game',
-    language: 'ja',
-    priority: 9
-  },
-  {
-    name: 'IndieGamesPlus',
-    url: 'https://indiegamesplus.com/feed',
-    category: 'game',
-    language: 'en',
-    priority: 9
-  },
-  {
-    name: 'IGN Japan',
-    url: 'https://jp.ign.com/feed.xml',
-    category: 'game',
-    language: 'ja',
-    priority: 8
-  },
-  {
-    name: 'Game*Spark',
-    url: 'https://www.gamespark.jp/rss/index.rdf',
-    category: 'game',
-    language: 'ja',
-    priority: 8
-  },
-  {
-    name: 'Steam News',
-    url: 'https://store.steampowered.com/feeds/news.xml',
-    category: 'game',
-    language: 'en',
-    priority: 8
-  },
-  {
-    name: '電撃オンライン',
-    url: 'https://dengekionline.com/rss/news.rdf',
-    category: 'game',
-    language: 'ja',
-    priority: 7
-  },
-  {
-    name: 'AUTOMATON',
-    url: 'https://automaton-media.com/feed/',
-    category: 'game',
-    language: 'ja',
-    priority: 7
-  },
-  {
-    name: 'SteamPrices新作',
-    url: 'https://www.steamprices.com/au/rss/new.xml',
-    category: 'game',
-    language: 'en',
-    priority: 7
-  },
-  {
-    name: 'IndieGameBundles',
-    url: 'https://indiegamebundles.com/feed',
-    category: 'game',
-    language: 'en',
-    priority: 6
-  }
-]
+// 共通設定を使用（../lib/game-rss-sources.tsから）
 
 // Supabase初期化
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -202,62 +131,7 @@ async function checkDuplicateUrls(urls: string[]): Promise<Set<string>> {
   }
 }
 
-// ゲーム記事の重要度計算（ゲーム特化版）
-function calculateGameImportanceScore(title: string, summary: string, source: any): number {
-  let score = source.priority || 5
-  
-  // ゲーム系重要キーワード（日英対応）
-  const importantKeywords = [
-    // 日本語キーワード
-    '発売', 'リリース', '新作', '続編', '発表', '公開',
-    'アップデート', 'DLC', '拡張', 'コラボ',
-    'Nintendo Direct', 'State of Play', 'Xbox Showcase',
-    'E3', 'TGS', 'gamescom', 'GDC',
-    '売上', 'ランキング', '1位', '記録',
-    'eスポーツ', '大会', '優勝', '賞金',
-    '無料', 'セール', '配信開始', 'サービス終了',
-    // 英語キーワード（Steam/インディー系）
-    'release', 'launch', 'announced', 'revealed', 'trailer',
-    'update', 'patch', 'dlc', 'expansion', 'early access',
-    'steam', 'indie', 'independent', 'bundle', 'sale',
-    'free', 'discount', 'wishlist', 'greenlight',
-    'kickstarter', 'crowdfunding', 'beta', 'alpha',
-    'gameplay', 'review', 'rating', 'award'
-  ]
-  
-  const content = (title + ' ' + summary).toLowerCase()
-  
-  importantKeywords.forEach(keyword => {
-    if (content.includes(keyword.toLowerCase())) {
-      score = Math.min(10, score + 0.5)
-    }
-  })
-  
-  // 大手ゲーム会社・インディー系企業・Steam関連企業
-  const majorCompanies = [
-    // 大手日本企業
-    '任天堂', 'ソニー', 'マイクロソフト', 'スクエニ', 'カプコン',
-    'バンナム', 'コナミ', 'セガ', 'フロムソフトウェア',
-    // 大手海外企業
-    'Nintendo', 'Sony', 'Microsoft', 'Square Enix', 'Capcom',
-    'Valve', 'Steam', 'Epic Games', 'Ubisoft', 'EA',
-    'Activision', 'Blizzard', 'Bethesda', 'CD Projekt',
-    // インディー系有名企業
-    'Team Cherry', 'Supergiant Games', 'Klei Entertainment',
-    'Devolver Digital', 'Annapurna Interactive', 'thatgamecompany',
-    'Hades', 'Cuphead', 'Hollow Knight', 'Among Us',
-    // Steam関連
-    'Early Access', 'Greenlight', 'Steam Workshop'
-  ]
-  
-  majorCompanies.forEach(company => {
-    if (content.includes(company.toLowerCase())) {
-      score = Math.min(10, score + 0.3)
-    }
-  })
-  
-  return Math.round(score * 10) / 10
-}
+// 重要度計算は共通関数を使用（../lib/game-rss-sources.tsから）
 
 // ゲーム系RSS収集メイン関数
 async function collectGameRSS() {

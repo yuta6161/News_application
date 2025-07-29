@@ -1,10 +1,12 @@
 export interface RSSSource {
   name: string;
   url: string;
-  category: 'Tech' | 'Music' | 'Conspiracy' | 'Business' | 'World' | 'Sports' | 'Entertainment';
+  category: 'Tech' | 'Music' | 'Game' | 'Conspiracy' | 'Business' | 'World' | 'Sports' | 'Entertainment';
   language: 'ja' | 'en';
   source_reliability: number; // 1-10の情報源信頼度
   display_on_site?: boolean; // サイトトップに表示するか（デフォルト: true）
+  priority?: number; // ゲーム系記事の重要度（1-10）
+  description?: string; // RSSソースの説明
 }
 
 export const rssSources: RSSSource[] = [
@@ -70,6 +72,97 @@ export const rssSources: RSSSource[] = [
     source_reliability: 10 // 公式ソース、最高信頼度
   },
   
+  // ゲーム系（新規追加）
+  {
+    name: '4Gamer.net',
+    url: 'https://www.4gamer.net/rss/news.xml',
+    category: 'Game',
+    language: 'ja',
+    source_reliability: 9,
+    priority: 10,
+    description: '国内最大級のPCゲーム専門メディア'
+  },
+  {
+    name: 'ファミ通.com',
+    url: 'https://www.famitsu.com/rss/famitsu_all.rdf',
+    category: 'Game',
+    language: 'ja',
+    source_reliability: 9,
+    priority: 9,
+    description: '日本最古参・最大手のゲーム総合メディア'
+  },
+  {
+    name: 'IndieGamesPlus',
+    url: 'https://indiegamesplus.com/feed',
+    category: 'Game',
+    language: 'en',
+    source_reliability: 8,
+    priority: 9,
+    description: 'インディーゲーム専門メディア（Gamasutra制作）'
+  },
+  {
+    name: 'IGN Japan',
+    url: 'https://jp.ign.com/feed.xml',
+    category: 'Game',
+    language: 'ja',
+    source_reliability: 8,
+    priority: 8,
+    description: '世界最大級ゲームメディアの日本版'
+  },
+  {
+    name: 'Game*Spark',
+    url: 'https://www.gamespark.jp/rss/index.rdf',
+    category: 'Game',
+    language: 'ja',
+    source_reliability: 8,
+    priority: 8,
+    description: '海外ゲーム・インディーゲーム特化'
+  },
+  {
+    name: 'Steam News',
+    url: 'https://store.steampowered.com/feeds/news.xml',
+    category: 'Game',
+    language: 'en',
+    source_reliability: 8,
+    priority: 8,
+    description: 'Steam公式ニュース'
+  },
+  {
+    name: '電撃オンライン',
+    url: 'https://dengekionline.com/rss/news.rdf',
+    category: 'Game',
+    language: 'ja',
+    source_reliability: 7,
+    priority: 7,
+    description: 'アニメ・ゲーム・ホビー総合'
+  },
+  {
+    name: 'AUTOMATON',
+    url: 'https://automaton-media.com/feed/',
+    category: 'Game',
+    language: 'ja',
+    source_reliability: 8,
+    priority: 7,
+    description: '独立系ゲームメディア、質重視'
+  },
+  {
+    name: 'SteamPrices新作',
+    url: 'https://www.steamprices.com/au/rss/new.xml',
+    category: 'Game',
+    language: 'en',
+    source_reliability: 6,
+    priority: 7,
+    description: 'Steam新作ゲーム専用'
+  },
+  {
+    name: 'IndieGameBundles',
+    url: 'https://indiegamebundles.com/feed',
+    category: 'Game',
+    language: 'en',
+    source_reliability: 6,
+    priority: 6,
+    description: 'PCゲームバンドル・無料Steamキー'
+  },
   
   // 音楽系（新規追加）
   {
