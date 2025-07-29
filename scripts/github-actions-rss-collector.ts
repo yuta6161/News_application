@@ -288,6 +288,7 @@ async function checkDuplicateUrls(supabase: any, urls: string[]): Promise<Set<st
 async function runGitHubActionsRSSCollection(supabase: any) {
   console.log('🌐 RSS収集を開始します...')
   const allArticles: any[] = []
+  const MAX_ARTICLES_TOTAL = 200 // タイムアウト対策で最大200記事に制限
   
   const parser = new Parser({
     customFields: {
@@ -296,6 +297,12 @@ async function runGitHubActionsRSSCollection(supabase: any) {
   })
   
   for (const source of rssSources) {
+    // 既に制限数に達している場合はスキップ
+    if (allArticles.length >= MAX_ARTICLES_TOTAL) {
+      console.log(`   ⚠️ 記事数上限(${MAX_ARTICLES_TOTAL}件)に達したため、残りのRSSはスキップします`)
+      break
+    }
+    
     try {
       console.log(`📡 ${source.name} から取得中... (${source.url})`)
       const feed = await parser.parseURL(source.url)
@@ -305,7 +312,11 @@ async function runGitHubActionsRSSCollection(supabase: any) {
         continue
       }
       
-      const articles = feed.items.slice(0, 10).map(item => {
+      // 各RSSから取得する記事数を動的に調整
+      const remainingSlots = MAX_ARTICLES_TOTAL - allArticles.length
+      const articlesPerFeed = Math.min(10, remainingSlots)
+      
+      const articles = feed.items.slice(0, articlesPerFeed).map(item => {
         const summary = item.contentSnippet || 
                        (item as any).description || 
                        (item as any).content || 
@@ -340,14 +351,14 @@ async function runGitHubActionsRSSCollection(supabase: any) {
       })
       
       allArticles.push(...articles)
-      console.log(`   ✅ ${articles.length} 件の記事を取得`)
+      console.log(`   ✅ ${articles.length} 件の記事を取得 (累計: ${allArticles.length}/${MAX_ARTICLES_TOTAL})`)
       
     } catch (error) {
       console.error(`   ❌ ${source.name} の取得中にエラー:`, error)
     }
   }
   
-  console.log(`📊 合計 ${allArticles.length} 件の記事を収集しました`)
+  console.log(`📊 合計 ${allArticles.length} 件の記事を収集しました (上限: ${MAX_ARTICLES_TOTAL}件)`)
   
   // 記事を保存してAI分析
   return await saveArticlesWithAI(supabase, allArticles)
