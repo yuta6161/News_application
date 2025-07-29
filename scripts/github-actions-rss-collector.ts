@@ -256,7 +256,7 @@ async function saveArticleAnalysis(supabase: any, articleId: number, analysis: a
             })
           
         } catch (tagSaveError) {
-          console.error(`   ⚠️ タグ保存エラー (${tag.tag_name}):`, tagSaveError.message)
+          console.error(`   ⚠️ タグ保存エラー (${tag.tag_name}):`, tagSaveError instanceof Error ? tagSaveError.message : tagSaveError)
         }
       }
       console.log(`   ✅ タグ保存完了`)
@@ -568,7 +568,7 @@ ${result.stats.newArticles > 0 ? '🎉 新着記事が正常に収集されま�
       
     } else {
       console.error('\n❌ RSS収集に失敗しました:')
-      console.error(result.error)
+      console.error('収集処理でエラーが発生しました')
       
       // GitHub Actions向けエラー出力
       if (process.env.GITHUB_ENV) {
@@ -629,7 +629,7 @@ async function printDatabaseStats(supabase: any) {
     
     // カテゴリ別統計
     const categoryStats: { [key: string]: number } = {}
-    allArticles?.forEach(article => {
+    allArticles?.forEach((article: any) => {
       categoryStats[article.category] = (categoryStats[article.category] || 0) + 1
     })
     
@@ -642,7 +642,7 @@ async function printDatabaseStats(supabase: any) {
     
     // ソース別統計（上位5つ）
     const sourceStats: { [key: string]: number } = {}
-    allArticles?.forEach(article => {
+    allArticles?.forEach((article: any) => {
       sourceStats[article.source_name] = (sourceStats[article.source_name] || 0) + 1
     })
     
@@ -656,7 +656,7 @@ async function printDatabaseStats(supabase: any) {
     
     // 今日追加された記事数
     const today = new Date().toISOString().split('T')[0]
-    const todayArticles = allArticles?.filter(article => 
+    const todayArticles = allArticles?.filter((article: any) => 
       article.created_at.startsWith(today)
     )
     console.log(`   📅 今日追加: ${todayArticles?.length || 0}件`)

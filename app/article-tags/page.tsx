@@ -138,28 +138,52 @@ export default function ArticleTagsPage() {
     loadPageData(newPage)
   }
 
-  // タグサマリー用に軽量にタグ統計のみ取得
+  // タグサマリー用に全記事の全タグを取得（統計表示用）
   const loadTagSummariesOnly = async () => {
     try {
-      console.log('🏷️ タグサマリー取得開始...')
+      console.log('🏷️ 統計表示用：全記事の全タグサマリー取得開始...')
       
-      // 全タグを直接取得（軽量）
-      const { data: allTags, error } = await supabase
-        .from('article_tags')
-        .select('tag_name, category, confidence_score, is_auto_generated')
+      // まず全記事数を取得
+      const { count: totalArticles } = await supabase
+        .from('news_articles')
+        .select('id', { count: 'exact' })
       
-      if (error) {
-        console.error('❌ タグ取得エラー:', error)
-        return
+      console.log('📊 統計対象全記事数:', totalArticles, '件')
+      
+      // 全タグを直接取得（バッチ処理で制限なし）
+      let allTags: any[] = []
+      let hasMore = true
+      let offset = 0
+      const limit = 1000
+      
+      while (hasMore) {
+        const { data: tagBatch, error } = await supabase
+          .from('article_tags')
+          .select('tag_name, category, confidence_score, is_auto_generated')
+          .range(offset, offset + limit - 1)
+        
+        if (error) {
+          console.error('❌ タグ取得エラー:', error)
+          break
+        }
+        
+        if (tagBatch && tagBatch.length > 0) {
+          allTags = [...allTags, ...tagBatch]
+          offset += limit
+          hasMore = tagBatch.length === limit
+          console.log(`🏷️ タグバッチ取得: ${tagBatch.length}件 (累計: ${allTags.length}件)`)
+        } else {
+          hasMore = false
+        }
       }
       
       if (!allTags || allTags.length === 0) {
-        console.log('⚠️ タグなし')
+        console.log('⚠️ 全記事の全タグなし')
         setTagSummaries([])
         return
       }
 
-      console.log('📊 タグサマリー計算開始:', allTags.length, '件のタグから集計')
+      console.log('📊 全記事の全タグから統計計算開始:', allTags.length, '件のタグレコードから集計')
       const tagSummaryMap: { [tagName: string]: any } = {}
       
       allTags.forEach(tag => {
@@ -196,10 +220,14 @@ export default function ArticleTagsPage() {
         return b.total_usage - a.total_usage // 使用頻度順
       })
 
-      console.log('✅ タグサマリー処理完了:', tagSummaries.length, '種類')
+      console.log('✅ 全記事全タグサマリー処理完了:', tagSummaries.length, '種類')
+      console.log('📌 事前定義タグ種類数:', tagSummaries.filter(t => !t.is_auto_generated).length)
+      console.log('🔄 自動生成タグ種類数:', tagSummaries.filter(t => t.is_auto_generated).length)
+      console.log('🏷️ 全タグレコード数:', allTags.length)
+      
       setTagSummaries(tagSummaries)
     } catch (err) {
-      console.error('❌ タグサマリー取得エラー:', err)
+      console.error('❌ 全記事全タグサマリー取得エラー:', err)
     }
   }
 

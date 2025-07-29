@@ -365,7 +365,7 @@ export async function executeSemanticSearch(intent: SearchIntent): Promise<Searc
       filteredArticles = articles.filter(article => {
         const tags = article.article_tags?.map((at: any) => at.tag_name) || []
         return !intent.excluded_tags.some(excludedTag => 
-          tags.some(tag => tag.toLowerCase().includes(excludedTag.toLowerCase()))
+          tags.some((tag: string) => tag.toLowerCase().includes(excludedTag.toLowerCase()))
         )
       })
       console.log(`🚫 除外タグフィルタ: ${articles.length}件 → ${filteredArticles.length}件`)
@@ -384,14 +384,14 @@ export async function executeSemanticSearch(intent: SearchIntent): Promise<Searc
       
       // 必須タグマッチボーナス
       for (const requiredTag of intent.required_tags) {
-        if (tags.some(tag => tag.toLowerCase().includes(requiredTag.toLowerCase()))) {
+        if (tags.some((tag: string) => tag.toLowerCase().includes(requiredTag.toLowerCase()))) {
           relevanceScore += 5.0 // 必須タグは高スコア
         }
       }
       
       // 推奨タグマッチボーナス
       for (const preferredTag of intent.preferred_tags) {
-        if (tags.some(tag => tag.toLowerCase().includes(preferredTag.toLowerCase()))) {
+        if (tags.some((tag: string) => tag.toLowerCase().includes(preferredTag.toLowerCase()))) {
           relevanceScore += 2.0 // 推奨タグは中スコア
         }
       }
