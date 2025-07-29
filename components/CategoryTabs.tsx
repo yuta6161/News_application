@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { NewsCategory } from '@/types'
 
-// 表示対象の3カテゴリのみ
-const CATEGORIES: Array<NewsCategory | 'All'> = ['All', 'Tech', 'Music', 'Conspiracy']
+// 表示対象カテゴリ（ゲーム追加）
+const CATEGORIES: Array<NewsCategory | 'All'> = ['All', 'Tech', 'Game', 'Music', 'Conspiracy']
 
 const CATEGORY_LABELS: Record<NewsCategory | 'All', string> = {
   All: '全て',
