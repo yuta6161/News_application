@@ -20,6 +20,13 @@ const gameRssSources = [
     priority: 9
   },
   {
+    name: 'IndieGamesPlus',
+    url: 'https://indiegamesplus.com/feed',
+    category: 'game',
+    language: 'en',
+    priority: 9
+  },
+  {
     name: 'IGN Japan',
     url: 'https://jp.ign.com/feed.xml',
     category: 'game',
@@ -31,6 +38,13 @@ const gameRssSources = [
     url: 'https://www.gamespark.jp/rss/index.rdf',
     category: 'game',
     language: 'ja',
+    priority: 8
+  },
+  {
+    name: 'Steam News',
+    url: 'https://store.steampowered.com/feeds/news.xml',
+    category: 'game',
+    language: 'en',
     priority: 8
   },
   {
@@ -46,6 +60,20 @@ const gameRssSources = [
     category: 'game',
     language: 'ja',
     priority: 7
+  },
+  {
+    name: 'SteamPrices新作',
+    url: 'https://www.steamprices.com/au/rss/new.xml',
+    category: 'game',
+    language: 'en',
+    priority: 7
+  },
+  {
+    name: 'IndieGameBundles',
+    url: 'https://indiegamebundles.com/feed',
+    category: 'game',
+    language: 'en',
+    priority: 6
   }
 ]
 
@@ -67,13 +95,16 @@ async function analyzeGameArticleWithGemini(title: string, summary: string, url:
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
     
-    const prompt = `ゲーム記事を詳細に分析してください：
-タイトル: ${title}
-要約: ${summary}
-ソース: ${source}
+    // 言語に応じてプロンプトを調整
+    const isEnglish = source.includes('Steam') || source.includes('Indie') || source.includes('IGN')
+    
+    const prompt = `${isEnglish ? 'Analyze this game article in detail' : 'ゲーム記事を詳細に分析してください'}：
+タイトル/Title: ${title}
+要約/Summary: ${summary}
+ソース/Source: ${source}
 URL: ${url}
 
-以下のJSON形式で返してください：
+${isEnglish ? 'Return in JSON format with Japanese translations' : '以下のJSON形式で返してください'}：
 {
   "title_ja": "日本語タイトル（既に日本語の場合は同じ）",
   "summary": "詳細な日本語要約（150文字程度）",
@@ -175,15 +206,23 @@ async function checkDuplicateUrls(urls: string[]): Promise<Set<string>> {
 function calculateGameImportanceScore(title: string, summary: string, source: any): number {
   let score = source.priority || 5
   
-  // ゲーム系重要キーワード
+  // ゲーム系重要キーワード（日英対応）
   const importantKeywords = [
+    // 日本語キーワード
     '発売', 'リリース', '新作', '続編', '発表', '公開',
     'アップデート', 'DLC', '拡張', 'コラボ',
     'Nintendo Direct', 'State of Play', 'Xbox Showcase',
     'E3', 'TGS', 'gamescom', 'GDC',
     '売上', 'ランキング', '1位', '記録',
     'eスポーツ', '大会', '優勝', '賞金',
-    '無料', 'セール', '配信開始', 'サービス終了'
+    '無料', 'セール', '配信開始', 'サービス終了',
+    // 英語キーワード（Steam/インディー系）
+    'release', 'launch', 'announced', 'revealed', 'trailer',
+    'update', 'patch', 'dlc', 'expansion', 'early access',
+    'steam', 'indie', 'independent', 'bundle', 'sale',
+    'free', 'discount', 'wishlist', 'greenlight',
+    'kickstarter', 'crowdfunding', 'beta', 'alpha',
+    'gameplay', 'review', 'rating', 'award'
   ]
   
   const content = (title + ' ' + summary).toLowerCase()
@@ -194,11 +233,21 @@ function calculateGameImportanceScore(title: string, summary: string, source: an
     }
   })
   
-  // 大手ゲーム会社の言及でスコアアップ
+  // 大手ゲーム会社・インディー系企業・Steam関連企業
   const majorCompanies = [
+    // 大手日本企業
     '任天堂', 'ソニー', 'マイクロソフト', 'スクエニ', 'カプコン',
     'バンナム', 'コナミ', 'セガ', 'フロムソフトウェア',
-    'Nintendo', 'Sony', 'Microsoft', 'Square Enix', 'Capcom'
+    // 大手海外企業
+    'Nintendo', 'Sony', 'Microsoft', 'Square Enix', 'Capcom',
+    'Valve', 'Steam', 'Epic Games', 'Ubisoft', 'EA',
+    'Activision', 'Blizzard', 'Bethesda', 'CD Projekt',
+    // インディー系有名企業
+    'Team Cherry', 'Supergiant Games', 'Klei Entertainment',
+    'Devolver Digital', 'Annapurna Interactive', 'thatgamecompany',
+    'Hades', 'Cuphead', 'Hollow Knight', 'Among Us',
+    // Steam関連
+    'Early Access', 'Greenlight', 'Steam Workshop'
   ]
   
   majorCompanies.forEach(company => {
@@ -238,7 +287,8 @@ async function collectGameRSS() {
       }
       
       const remainingSlots = MAX_ARTICLES_TOTAL - allArticles.length
-      const articlesPerFeed = Math.min(20, remainingSlots) // ゲーム記事は各サイト20件まで
+      // RSS数が増えたので各サイトの取得数を調整（10サイト×15記事=150記事想定）
+      const articlesPerFeed = Math.min(15, remainingSlots)
       
       const articles = feed.items.slice(0, articlesPerFeed).map(item => {
         const summary = item.contentSnippet || 
