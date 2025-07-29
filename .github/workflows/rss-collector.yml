@@ -1,9 +1,9 @@
 name: RSS Auto Collection with Gemini AI
 
 on:
-  schedule:
-    # 毎時0分に実行（UTCタイム）
-    - cron: '0 * * * *'
+  # schedule:
+  #   # 毎時0分に実行（UTCタイム）- 一時停止中（ゲーム特化RSS収集に移行）
+  #   - cron: '0 * * * *'
   workflow_dispatch: # 手動実行も可能
 
 jobs:
