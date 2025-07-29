@@ -3,7 +3,7 @@ export const gameRssSources = [
   {
     name: '4Gamer.net',
     url: 'https://www.4gamer.net/rss/news.xml',
-    category: 'game',
+    category: 'Game',
     language: 'ja',
     priority: 10,
     description: '国内最大級のPCゲーム専門メディア'
@@ -11,7 +11,7 @@ export const gameRssSources = [
   {
     name: 'ファミ通.com',
     url: 'https://www.famitsu.com/rss/famitsu_all.rdf',
-    category: 'game',
+    category: 'Game',
     language: 'ja',
     priority: 9,
     description: '日本最古参・最大手のゲーム総合メディア'
@@ -19,7 +19,7 @@ export const gameRssSources = [
   {
     name: 'IndieGamesPlus',
     url: 'https://indiegamesplus.com/feed',
-    category: 'game',
+    category: 'Game',
     language: 'en',
     priority: 9,
     description: 'インディーゲーム専門メディア（Gamasutra制作）'
@@ -27,7 +27,7 @@ export const gameRssSources = [
   {
     name: 'IGN Japan',
     url: 'https://jp.ign.com/feed.xml',
-    category: 'game',
+    category: 'Game',
     language: 'ja',
     priority: 8,
     description: '世界最大級ゲームメディアの日本版'
@@ -35,7 +35,7 @@ export const gameRssSources = [
   {
     name: 'Game*Spark',
     url: 'https://www.gamespark.jp/rss/index.rdf',
-    category: 'game',
+    category: 'Game',
     language: 'ja',
     priority: 8,
     description: '海外ゲーム・インディーゲーム特化'
@@ -43,7 +43,7 @@ export const gameRssSources = [
   {
     name: 'Steam News',
     url: 'https://store.steampowered.com/feeds/news.xml',
-    category: 'game',
+    category: 'Game',
     language: 'en',
     priority: 8,
     description: 'Steam公式ニュース'
@@ -51,7 +51,7 @@ export const gameRssSources = [
   {
     name: '電撃オンライン',
     url: 'https://dengekionline.com/rss/news.rdf',
-    category: 'game',
+    category: 'Game',
     language: 'ja',
     priority: 7,
     description: 'アニメ・ゲーム・ホビー総合'
@@ -59,7 +59,7 @@ export const gameRssSources = [
   {
     name: 'AUTOMATON',
     url: 'https://automaton-media.com/feed/',
-    category: 'game',
+    category: 'Game',
     language: 'ja',
     priority: 7,
     description: '独立系ゲームメディア、質重視'
@@ -67,7 +67,7 @@ export const gameRssSources = [
   {
     name: 'SteamPrices新作',
     url: 'https://www.steamprices.com/au/rss/new.xml',
-    category: 'game',
+    category: 'Game',
     language: 'en',
     priority: 7,
     description: 'Steam新作ゲーム専用'
@@ -75,7 +75,7 @@ export const gameRssSources = [
   {
     name: 'IndieGameBundles',
     url: 'https://indiegamebundles.com/feed',
-    category: 'game',
+    category: 'Game',
     language: 'en',
     priority: 6,
     description: 'PCゲームバンドル・無料Steamキー'

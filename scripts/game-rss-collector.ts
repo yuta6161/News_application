@@ -199,7 +199,7 @@ async function collectGameRSS() {
           source_url: item.link || '',
           published_at: item.pubDate || new Date().toISOString(),
           source_name: source.name,
-          category: source.category,
+          category: 'Game', // データベース制約に合わせてGameに統一
           original_language: source.language,
           importance_score: importanceScore,
           image_url: imageUrl,
