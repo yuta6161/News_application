@@ -20,6 +20,12 @@ interface SimpleNewsCardProps {
 
 const CATEGORY_COLORS: Record<string, string> = {
   'Tech': 'bg-blue-100 text-blue-800',
+  'Game': 'bg-green-100 text-green-800',
+  'Music': 'bg-pink-100 text-pink-800',
+  'Business': 'bg-yellow-100 text-yellow-800',
+  'World': 'bg-indigo-100 text-indigo-800',
+  'Sports': 'bg-orange-100 text-orange-800',
+  'Entertainment': 'bg-red-100 text-red-800',
   'Conspiracy': 'bg-purple-100 text-purple-800',
   'All': 'bg-gray-100 text-gray-800'
 }
@@ -32,8 +38,38 @@ export default function SimpleNewsCard({ article, onRead, onHelpful }: SimpleNew
     if (onHelpful) onHelpful(article.id)
   }
 
+  const formatTimeAgo = (dateString: string) => {
+    const now = new Date()
+    const published = new Date(dateString)
+    const diffInMs = now.getTime() - published.getTime()
+    const diffInSeconds = Math.floor(diffInMs / 1000)
+    const diffInMinutes = Math.floor(diffInSeconds / 60)
+    const diffInHours = Math.floor(diffInMinutes / 60)
+    const diffInDays = Math.floor(diffInHours / 24)
+
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds}秒前`
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes}分前`
+    } else if (diffInHours < 24) {
+      return `${diffInHours}時間前`
+    } else if (diffInDays < 7) {
+      return `${diffInDays}日前`
+    } else {
+      // 1週間以上前の場合は時間前表示なし
+      return null
+    }
+  }
+
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ja-JP')
+    const published = new Date(dateString)
+    return published.toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
 
   const getImportanceIcon = (score: number) => {
@@ -46,6 +82,12 @@ export default function SimpleNewsCard({ article, onRead, onHelpful }: SimpleNew
   const getCategoryIcon = (category: string) => {
     const iconMap: Record<string, string> = {
       'Tech': '💻',
+      'Game': '🎮',
+      'Music': '🎵',
+      'Business': '💼',
+      'World': '🌍',
+      'Sports': '⚽',
+      'Entertainment': '🎭',
       'Conspiracy': '🔍',
       'All': '📰'
     }
@@ -72,7 +114,18 @@ export default function SimpleNewsCard({ article, onRead, onHelpful }: SimpleNew
               <span>{getImportanceIcon(article.importance_score)}</span>
               <span>重要度: {article.importance_score}</span>
             </span>
-            <span>📅 {formatDate(article.published_at)}</span>
+            <span className="flex items-center space-x-2">
+              <span className="flex items-center space-x-1">
+                <span>📅</span>
+                <span>{formatDate(article.published_at)}</span>
+              </span>
+              {formatTimeAgo(article.published_at) && (
+                <span className="flex items-center space-x-1 text-green-600 font-medium">
+                  <span>⏰</span>
+                  <span>{formatTimeAgo(article.published_at)}</span>
+                </span>
+              )}
+            </span>
           </div>
         </div>
       </div>

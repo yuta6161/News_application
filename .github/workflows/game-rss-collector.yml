@@ -1,10 +1,11 @@
 name: Game RSS Auto Collection with Gemini AI
 
 on:
-  schedule:
-    # 30分ごとに実行（UTCタイム）- ゲーム記事専用
-    - cron: '*/30 * * * *'
-  workflow_dispatch: # 手動実行も可能
+  # schedule:
+  #   # 30分ごとに実行（UTCタイム）- ゲーム記事専用
+  #   # 一時停止中: RSS フィードの404エラー問題対応のため
+  #   - cron: '*/30 * * * *'
+  workflow_dispatch: # 手動実行のみ可能
 
 jobs:
   collect-game-rss:
